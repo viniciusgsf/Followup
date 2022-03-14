@@ -1,4 +1,3 @@
-import { shade } from "polished";
 import styled from "styled-components";
 
 
@@ -45,25 +44,29 @@ export const Topbar = styled.div`
             height: 20px;
         }
 
-        &:hover {
-        background: ${shade(0.2, '#dfdfdf')};
-  }
     }
 
     label {
         display: flex;
         align-items: center;
         justify-content: center;
+
     }
 
     span {
         height: 40px;
         width: 40px;
-        background-color: #ccc;
+       
         border-radius: 50%;
         display: block;
         margin-left: 16px;
         margin-right: 8px;
+
+        img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+        }
        
     }
 `;
