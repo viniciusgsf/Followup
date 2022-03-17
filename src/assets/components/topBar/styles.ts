@@ -10,11 +10,18 @@ export const Container = styled.header`
     z-index: 1100;
     top: 0;
     right: 0;   
+    background-color: #fff;
     box-shadow:  0px 1px 4px rgba(100, 116, 139, 0.12);
+
+    @media (max-width: 1200px) {
+        display: flex;
+        flex-direction: column;
+        left: auto;
+        width: 100%;
+    }
 `;
 
 export const Topbar = styled.div`
-    min-height: 64px;
     display: flex;
     position: relative;
     justify-content: space-between;
@@ -24,6 +31,7 @@ export const Topbar = styled.div`
     padding-right: 16px;
 
     button {
+        height: 56px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -50,7 +58,6 @@ export const Topbar = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-
     }
 
     span {
@@ -70,3 +77,18 @@ export const Topbar = styled.div`
        
     }
 `;
+
+export const SearchButton = styled.div `
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const HiddenButton = styled.div`
+    display: none;
+
+    @media (max-width: 1200px ) {
+        display: block;
+    }
+`;
+

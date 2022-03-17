@@ -1,15 +1,16 @@
 import React from 'react';
 
-import SignIn from './pages/signIn';
+import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import Sidebar from './assets/components/sideMenu';
-import TopBar from './assets/components/topBar';
+import Dashboard from './pages/Dashboard';
+import PhoneTypes from './pages/Cadastro/PhoneTypes';
 
 import GlobalStyle from './styles/global';
 
 const App: React.FC = () => (
   <>
-    <TopBar/>
+
+    <PhoneTypes/>
     <GlobalStyle/>
   </>
 ) 

@@ -1,7 +1,7 @@
 import React from "react";
 
 import {FiArrowLeft, FiLock, FiMail, FiUser} from 'react-icons/fi';
-import HomemadeButton from "../../assets/components/Button";
+import CompButton from "../../assets/components/Button";
  
 import { Container, Content, Terms} from './styles';
 import Input from "../../assets/components/input";
@@ -36,7 +36,7 @@ const SignUp: React.FC = () => (
 
                         </Terms> 
 
-                            <HomemadeButton type="submit">Cadastrar</HomemadeButton>
+                            <CompButton type="submit">Cadastrar</CompButton>
                             <p>Já tem uma conta?<a href="Login"> Faça seu Login</a></p> 
                             
                     </form>

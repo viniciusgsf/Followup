@@ -17,7 +17,7 @@ export const Container = styled.div `
         height: 52px;
         border-radius: 7px;
         border: 0.2px solid #dadada;
-        margin-top: 15px;
+        margin-top: 10px;
         transition: border-color 0.2s;
 
         &:hover {
@@ -27,9 +27,7 @@ export const Container = styled.div `
     display: flex;
     align-items: center;
 
-    & + div {
-            margin-top: 8px;
-        }
+    
 
 
     input {

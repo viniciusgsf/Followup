@@ -1,18 +1,30 @@
 import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { FiBell, FiUsers } from "react-icons/fi";
+import { FiAlignJustify, FiBell, FiUsers } from "react-icons/fi";
 
-import Input from "../input";
-import Sidebar from '../sideMenu';
-import {Container, Topbar} from './styles';
 
-const TopBar: React.FC = () => (   
+import Sidebar from '../Sidebar';
+import {Container, Topbar, HiddenButton, SearchButton} from './styles';
+
+
+const TopBar: React.FC = () => {
+  const [sidebar, setSidebar] = React.useState(false)
+  const showSidebar = () => {setSidebar(!sidebar);};
+
+    return (   
     <>
       <Container>
         <Topbar>
-            <button type="button" title="Buscar">
-              <Input name="email" icon={AiOutlineSearch} type="text" placeholder="Buscar..." />
-            </button>
+          <SearchButton>
+            <HiddenButton>
+              <button type="button" title="Menu" onClick={showSidebar}>
+                <FiAlignJustify/>
+              </button>
+            </HiddenButton>
+              <button type="button" title="Buscar">
+                <AiOutlineSearch/>
+              </button>
+          </SearchButton>
           
 
           <label>
@@ -34,8 +46,8 @@ const TopBar: React.FC = () => (
         </Topbar>
 
       </Container>
-      <Sidebar/>
+      <Sidebar />
     </>
-) 
+)}
 
 export default TopBar;

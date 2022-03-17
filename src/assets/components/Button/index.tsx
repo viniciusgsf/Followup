@@ -6,7 +6,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
 };
 
-const HomemadeButton: React.FC<ButtonProps> = ({ children, loading, ...rest }) => {
+const CompButton: React.FC<ButtonProps> = ({ children, loading, ...rest }) => {
   return (
     <Container type="button" {...rest}>
       {loading ? 'Carregando...' : children}
@@ -14,4 +14,4 @@ const HomemadeButton: React.FC<ButtonProps> = ({ children, loading, ...rest }) =
   );
 };
 
-export default HomemadeButton;
+export default CompButton;

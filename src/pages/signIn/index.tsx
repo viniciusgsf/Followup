@@ -2,7 +2,7 @@ import React from "react";
 import Button from '@mui/material/Button';
 import {FiArrowLeft, FiFacebook, FiLock, FiMail} from 'react-icons/fi';
 import { AiOutlineGoogle } from 'react-icons/ai';
-import HomemadeButton from "../../assets/components/Button";
+import CompButton from "../../assets/components/Button";
  
 import { Container, Content, SMediaCamp, MailCamps, MediaButtons, Transition } from './styles';
 import Input from "../../assets/components/input";
@@ -55,7 +55,7 @@ const SignIn: React.FC = () => (
                         <Input name="email" icon={FiMail} type="text" placeholder="E-mail" />
                         <Input name="password" icon={FiLock} type="password" placeholder="Senha" />
 
-                        <HomemadeButton type="submit">Entrar</HomemadeButton>
+                        <CompButton type="submit">Entrar</CompButton>
                         
                     </form>
 
