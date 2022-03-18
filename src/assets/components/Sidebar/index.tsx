@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -18,6 +18,11 @@ export default function NestedList() {
     setOpen(!open);
   };
 
+  const [openSecList, setOpenSecList] = React.useState(false);
+  const handleAltClick = () => {
+    setOpenSecList(!openSecList);
+  };
+
   return (
          <ListStyle>
             <div >
@@ -31,7 +36,7 @@ export default function NestedList() {
             </div>
             <hr />
               <List
-                  sx={{ width: '100%', height: '100%', bgcolor: '#5048E5', color: '#FFf' }}
+                  sx={{ width: '100%', height: '100%', bgcolor: '#1565c0', color: '#FFf' }}
                   component="nav"
                   aria-labelledby="nested-list-subheader"
 
@@ -45,7 +50,7 @@ export default function NestedList() {
                   </ListItemButton>
                   <Collapse in={open} timeout="auto" unmountOnExit>
 
-                      <List sx={{ width: '100%', height: '100%', bgcolor: '#5048E5', color: '#FFf' }} component="div" disablePadding>
+                      <List sx={{ width: '100%', height: '100%', bgcolor: '#1565c0', color: '#FFf' }} component="div" disablePadding>
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Plano de Negócio" />
                           </ListItemButton>
@@ -103,17 +108,33 @@ export default function NestedList() {
                       </List>
 
                   </Collapse>
-                  <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemButton onClick={handleAltClick}>
+                      <ListItemText primary="Follow-up" />
+                      {open ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                  <Collapse in={openSecList} timeout="auto" unmountOnExit>
+
+                      <List sx={{ width: '100%', height: '100%', bgcolor: '#1565c0', color: '#FFf' }} component="div" disablePadding>
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Motivo de Contato" />
+                          </ListItemButton>
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Meio de Contato" />
+                          </ListItemButton>
+                      </List>
+
+                  </Collapse>
+                  <ListItemButton >
                       <ListItemText primary="Perfil" />
                   </ListItemButton>
-                  <ListItemButton sx={{ pl: 4 }} href="#simple-list">
+                  <ListItemButton href="#simple-list">
                       <ListItemText primary="Configurações" />
                   </ListItemButton>
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton >
                         <ListItemText primary="Login" />
                     </ListItemButton>
                   
-                  <ListItemButton sx={{ pl: 4 }} href="#simple-list">
+                  <ListItemButton href="#simple-list">
                       <ListItemText primary="Cadastro" />
                   </ListItemButton>
               </List>

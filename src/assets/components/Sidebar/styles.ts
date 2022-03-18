@@ -9,8 +9,10 @@ export const ListStyle = styled.div`
     top: 0;
     left: 0;
     overflow-y: scroll;
-    background-color: #5048E5;
+    background-color: #1565c0;
     border-radius: 5px;
+
+    
 
     hr {
         border-style: solid;
