@@ -38,7 +38,7 @@ export const MainContent = styled.div `
     }
 `;
 
-export const Bplan = styled.div`
+export const TopContent = styled.div`
     
 `;
 export const Topside = styled.div`
@@ -106,11 +106,11 @@ export const ButtonDiv = styled.div`
 
 
 
-export const BplanContent = styled.div `
+export const BottomContent = styled.div `
     margin-top: 24px;
 `;
 
-export const BplanContentContainer = styled.div `
+export const ContentContainer = styled.div `
     background-color: #FFF;
     color: #121828;
     transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -120,12 +120,12 @@ export const BplanContentContainer = styled.div `
     
 `;
 
-export const BplanInfo = styled.div `
+export const ContentInfo = styled.div `
     box-sizing: border-box;
     margin: 0;
 `;
 
-export const ScrollbarBplan = styled.div `
+export const TableScrollbar = styled.div `
     @media ( max-width: 600px) {
         overflow-x: scroll;
     }
@@ -135,7 +135,7 @@ export const ScrollbarBplan = styled.div `
     }
 `;
 
-export const BplanItens = styled.div`
+export const TableItens = styled.div`
     min-width: 1050px;
 
     table {
@@ -168,7 +168,7 @@ export const BplanItens = styled.div`
     }  
 `;
 
-export const BplanCheckbox = styled.th`
+export const TableCheckbox = styled.th`
     border-bottom: none;
     font-size: 12px;
     font-weight: 600;
@@ -200,7 +200,7 @@ export const BplanCheckbox = styled.th`
         }
 `;
 
-export const BplanBody = styled.tbody `
+export const TableBody = styled.tbody `
     display: table-header-group;
 
     thead {
@@ -216,13 +216,13 @@ export const BplanBody = styled.tbody `
 
 `;
 
-export const BplanButtons = styled.div`
+export const InteractiveButtons = styled.div`
     min-height: 52px;
     margin-top: 15px;   
     
 `;
 
-export const BplanButtonsContent = styled.div`
+export const InteractiveButtonsContent = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: end;
@@ -236,7 +236,7 @@ export const BplanButtonsContent = styled.div`
     }
 `;
 
-export const BplanButtonsDiv = styled.div`
+export const InteractiveButtonsDiv = styled.div`
     margin-left: 10px;
     
     @media ( max-width: 600px) {

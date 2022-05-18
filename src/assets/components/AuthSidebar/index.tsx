@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -9,7 +10,6 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 
 import { ListStyle, Toplist } from './styles';
 import { FiLayers } from 'react-icons/fi';
-
 
 
 export default function NestedList() {
@@ -41,9 +41,11 @@ export default function NestedList() {
                   aria-labelledby="nested-list-subheader"
 
               >
-                  <ListItemButton>
-                      <ListItemText primary="Dashboard" />
-                  </ListItemButton>
+                    <Link to="/home">
+                        <ListItemButton href="#simple-list">
+                            <ListItemText primary="Home" />
+                        </ListItemButton>
+                    </Link>
                   <ListItemButton onClick={handleClick}>
                       <ListItemText primary="Geral" />
                       {open ? <ExpandLess /> : <ExpandMore />}
@@ -51,60 +53,113 @@ export default function NestedList() {
                   <Collapse in={open} timeout="auto" unmountOnExit>
 
                       <List sx={{ width: '100%', height: '100%', bgcolor: '#1565c0', color: '#FFf' }} component="div" disablePadding>
+                          
+                        <Link to="businessPlan">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Plano de Negócio" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="treatmentForm">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Forma de Tratamento" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="functions">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Função" />
+                              <ListItemText primary="Funções" />
                           </ListItemButton>
+                        </Link>  
+
+                        <Link to="profession">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Profissão" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="estagios">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Estágio" />
+                              <ListItemText primary="Estágios" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="situations">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Situação" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="logradouros">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Logradouros" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="tiposLogradouro">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Tipo de Logradouro" />
+                          </ListItemButton>
+                        </Link>
+
+                        <Link to="ramos">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Ramos" />
+                          </ListItemButton>
+                        </Link>
+
+                        <Link to="fonts">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Fontes" />
+                          </ListItemButton>
+                        </Link>
+
+                        <Link to="subFonts">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Sub-fontes" />
+                          </ListItemButton>
+                        </Link>
+
+                        <Link to="segments">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Segmentos" />
+                          </ListItemButton>
+                        </Link>
+
+                        <Link to="phoneTypes">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Tipo de telefone" />
                           </ListItemButton>
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Ramo" />
-                          </ListItemButton>
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Segmento" />
-                          </ListItemButton>
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Sub-fonte" />
-                          </ListItemButton>
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Fonte" />
-                          </ListItemButton>
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Tipos de logradouros" />
-                          </ListItemButton>
+                        </Link>
+
+                        <Link to="bairros">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Bairros" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="locals">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Localidades" />
                           </ListItemButton>
+                        </Link>
+                        <Link to="states">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Estados" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="nationalities">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Nacionalidade" />
                           </ListItemButton>
+                        </Link>
+
+                        <Link to="countries">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="País" />
+                              <ListItemText primary="Países" />
                           </ListItemButton>
+                        </Link>
                       </List>
 
                   </Collapse>
@@ -115,29 +170,32 @@ export default function NestedList() {
                   <Collapse in={openSecList} timeout="auto" unmountOnExit>
 
                       <List sx={{ width: '100%', height: '100%', bgcolor: '#1565c0', color: '#FFf' }} component="div" disablePadding>
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Motivo de Contato" />
-                          </ListItemButton>
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Meio de Contato" />
-                          </ListItemButton>
+                        <Link to="/contactmotives">
+                            <ListItemButton href="#simple-list">
+                                <ListItemText primary="Motivo de contato" />
+                            </ListItemButton>
+                        </Link>
+                        <Link to="/contactways">
+                            <ListItemButton href="#simple-list">
+                                <ListItemText primary="Meios de contato" />
+                            </ListItemButton>
+                        </Link>
                       </List>
 
                   </Collapse>
-                  <ListItemButton >
-                      <ListItemText primary="Perfil" />
-                  </ListItemButton>
+                  <Link to="profile">
+                    <ListItemButton href="#simple-list">
+                        <ListItemText primary="Perfil" />
+                    </ListItemButton>
+                  </Link>
+                  <Link to="settings">
                   <ListItemButton href="#simple-list">
                       <ListItemText primary="Configurações" />
                   </ListItemButton>
-                    <ListItemButton >
-                        <ListItemText primary="Login" />
-                    </ListItemButton>
-                  
-                  <ListItemButton href="#simple-list">
-                      <ListItemText primary="Cadastro" />
-                  </ListItemButton>
+                  </Link>
+
               </List>
            </ListStyle>
   );
 }
+

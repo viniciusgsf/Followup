@@ -1,15 +1,14 @@
 import React from "react";
 
-import Sidebar from '../../assets/components/Sidebar';
+import PublicSidebar from "../../assets/components/PublicSidebar";
 import TopBar from "../../assets/components/topBar";
 
 import {Container, SubContainer, Content, GridContainer, GridItems, SmallGrid, BigGrid, SideGrid} from './styles';
 
 const Dashboard:React.FC = ( ) => (
     <>
-        <Sidebar/>
-        <TopBar/>
         <Container>
+        <PublicSidebar/>
             <SubContainer>
                 <Content>
                     <GridContainer>

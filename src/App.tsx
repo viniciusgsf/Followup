@@ -1,18 +1,23 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
-import Dashboard from './pages/Dashboard';
-import ContactWays from './pages/FollowUp/ContactWays';
-
+import AppRoutes from './routes/AppRoutes';
+import CadastroRoutes from './routes/CadastroRoutes';
+import FollowupRoutes from './routes/FollowupRoutes';
 import GlobalStyle from './styles/global';
+import {AuthProvider} from './hooks/AuthContext';
 
 const App: React.FC = () => (
-  <>
-
-    <ContactWays/>
+  
+  <BrowserRouter>
+    <AuthProvider>
+      <AppRoutes/>
+      <CadastroRoutes/>
+      <FollowupRoutes/>
+    </AuthProvider>
     <GlobalStyle/>
-  </>
-) 
+  </BrowserRouter>
+  
+);
 
 export default App;

@@ -5,14 +5,13 @@ import styled, {css} from "styled-components";
 import Tooltip from '../Tooltip/index';
 
 
-// interface ContainerProps {
-//     isFocused: boolean;
-//     isFilled: boolean;
-//     isErrored: boolean;
-// }
-// <ContainerProps>
+interface ContainerProps {
+    isFocused: boolean;
+    isFilled: boolean;
+    isErrored: boolean;
+}
 
-export const Container = styled.div `
+export const Container = styled.div<ContainerProps> `
         width: 100%;
         height: 52px;
         border-radius: 7px;
@@ -23,6 +22,18 @@ export const Container = styled.div `
         &:hover {
             border: 1px solid #000;
         }
+
+        ${props => props.isFocused && css `
+        color: #ff9000;
+        border-color: #ff9000; 
+        `} 
+
+        ${props => props.isFilled && css `
+            color: #ff9000;
+        `} 
+        ${props => props.isErrored && css `
+            border-color: #c53030; 
+        `} 
 
     display: flex;
     align-items: center;

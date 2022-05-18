@@ -63,9 +63,9 @@ export const Topbar = styled.div`
     span {
         height: 40px;
         width: 40px;
-       
+        align-items: center;
         border-radius: 50%;
-        display: block;
+        display: flex;
         margin-left: 16px;
         margin-right: 8px;
 

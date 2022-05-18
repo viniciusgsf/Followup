@@ -1,4 +1,3 @@
-import { shade } from "polished";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -15,6 +14,9 @@ export const Content = styled.div`
         margin-right: 5px;
     }
 
+`;
+
+export const SigninContent = styled.div`
 `;
 
 export const SMediaCamp = styled.div`
@@ -79,33 +81,19 @@ export const MailCamps = styled.div`
 
     form {
         margin-top: 32px;
-        
-        /* input {
-            width: 100%;
-            height: 52px;
-            border-radius: 7px;
-            border: 0.2px solid #dadada;
-            margin-top: 15px;
 
-            &:hover {
-                border: 1px solid #000;
-            }
-        } */
+    }
+`;
 
-        /* button {
-            width: 100%;
-            height: 52px;
-            border-radius: 7px;
-            border: 0.2px solid #dadada;
-            margin-top: 22px;
-            background-color: #5048E5;
-            color: #fff;
-            font-weight: 500;
+export const MailUtilsCamp = styled.div `
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 
-            &:hover {
-            background-color: ${shade(0.2, '#5048E5')};
-            }
-        } */
-
+    @media ( max-width: 600px) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
     }
 `;

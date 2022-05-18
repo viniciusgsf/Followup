@@ -1,23 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { FiAlignJustify, FiBell, FiUsers } from "react-icons/fi";
+import { FiAlignJustify, FiBell, FiPower, FiUsers } from "react-icons/fi";
+import { useAuth } from "../../../hooks/AuthContext";
 
 
-import Sidebar from '../Sidebar';
+import Sidebar from '../AuthSidebar';
 import {Container, Topbar, HiddenButton, SearchButton} from './styles';
 
 
 const TopBar: React.FC = () => {
-  const [sidebar, setSidebar] = React.useState(false)
-  const showSidebar = () => {setSidebar(!sidebar);};
 
+  const { signOut } = useAuth();
+
+    // const [showSidebar, setShowSidebar] = useState(true)
+    // const toggleSidebar = () => setShowSidebar(!showSidebar)
+  
     return (   
     <>
       <Container>
         <Topbar>
           <SearchButton>
-            <HiddenButton>
-              <button type="button" title="Menu" onClick={showSidebar}>
+            <HiddenButton >
+              <button type="button" title="Menu" >
                 <FiAlignJustify/>
               </button>
             </HiddenButton>
@@ -26,7 +30,7 @@ const TopBar: React.FC = () => {
               </button>
           </SearchButton>
           
-
+          
           <label>
             <button type="button" title="Contatos">
               <FiUsers/>
@@ -37,11 +41,12 @@ const TopBar: React.FC = () => {
             </button>
 
             <span>
-              <a href="/profile">
-                <img src="https://i.pravatar.cc/300" alt="" />
-              </a>
+            <button type="button" onClick={signOut}>
+                <FiPower/>
+            </button>
             </span>
           </label>
+        
 
         </Topbar>
 

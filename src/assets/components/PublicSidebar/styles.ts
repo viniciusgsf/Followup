@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ListStyle = styled.div`
+export const PublicListStyle = styled.div`
     flex-direction: column;
     min-width: 240px;
     height: 100vh;
@@ -12,7 +12,10 @@ export const ListStyle = styled.div`
     background-color: #1565c0;
     border-radius: 5px;
 
-    
+    a { 
+        text-decoration: none;
+        color: #FFF;
+    }
 
     hr {
         border-style: solid;

@@ -3,14 +3,14 @@ import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FiCheck, FiCircle, FiSearch, FiTrash2 } from "react-icons/fi";
 
-import Input from "../../../assets/components/input";
+import SearchInput from "../../../assets/components/SearchInput";
 
 
-import SideBar from '../../../assets/components/Sidebar';
+import SideBar from '../../../assets/components/AuthSidebar';
 import TopBar from "../../../assets/components/topBar";
 
-import {Container, SubContainer, Content, MainContent, Bplan, Topside, BottomSide, BottomContainer , BottomInputs, ButtonDiv, BplanContent, BplanContentContainer, BplanInfo,
-    ScrollbarBplan, BplanItens, BplanCheckbox, BplanBody, BplanButtons, BplanButtonsContent, BplanButtonsDiv
+import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer , BottomInputs, ButtonDiv, BottomContent, ContentContainer, ContentInfo,
+    TableScrollbar, TableItens, TableCheckbox, TableBody, InteractiveButtons, InteractiveButtonsContent, InteractiveButtonsDiv
 } from './styles';
 
 const Logradouros: React.FC = () => {
@@ -21,7 +21,7 @@ const Logradouros: React.FC = () => {
             <SubContainer>
                 <Content>
                     <MainContent>
-                        <Bplan>
+                        <TopContent>
                             <Topside>
                                 <h4>Cadastro de Logradouros</h4>
                             </Topside>
@@ -30,32 +30,32 @@ const Logradouros: React.FC = () => {
                                     <BottomInputs>
                                         <label>   
                                             <ButtonDiv>
-                                            <Input name="description" icon={FiSearch} type="text" placeholder="Logradouro"/>
+                                            <SearchInput name="description" icon={FiSearch} type="text" placeholder="Logradouro"/>
                                             </ButtonDiv>
                                             <ButtonDiv>
-                                            <Input name="description" icon={FiSearch} type="text" placeholder="Bairro"/>
+                                            <SearchInput name="description" icon={FiSearch} type="text" placeholder="Bairro"/>
                                             </ButtonDiv>
                                             <ButtonDiv>
-                                            <Input name="description" icon={FiSearch} type="text" placeholder="Localidade"/>
+                                            <SearchInput name="description" icon={FiSearch} type="text" placeholder="Localidade"/>
                                             </ButtonDiv>
                                         </label>
                                     </BottomInputs>
                                 </BottomContainer>
                             </BottomSide>
-                        </Bplan>
-                        <BplanContent>
-                            <BplanContentContainer>
-                                <BplanInfo> 
-                                    <ScrollbarBplan>
-                                        <BplanItens>
+                        </TopContent>
+                        <BottomContent>
+                            <ContentContainer>
+                                <ContentInfo> 
+                                    <TableScrollbar>
+                                        <TableItens>
                                             <table>
                                                 <thead>
                                                     <tr>
-                                                        <BplanCheckbox>
+                                                        <TableCheckbox>
                                                             <span>
                                                                 <Checkbox {...label} />
                                                             </span>
-                                                        </BplanCheckbox>
+                                                        </TableCheckbox>
                                                         <th>Tipo</th>
                                                         <th>Logradouro</th>
                                                         <th>Bairro</th>
@@ -63,13 +63,13 @@ const Logradouros: React.FC = () => {
                                                         <th>CEP</th>
                                                     </tr>
                                                 </thead>
-                                                <BplanBody>
+                                                <TableBody>
                                                         <tr>
-                                                            <BplanCheckbox>
+                                                            <TableCheckbox>
                                                                 <span>
                                                                     <Checkbox {...label} />
                                                                 </span>
-                                                            </BplanCheckbox>
+                                                            </TableCheckbox>
                                                             <th>Avenida</th>
                                                             <th>Pq. Jhon Snow</th>
                                                             <th>Game of Thrones</th>
@@ -77,32 +77,32 @@ const Logradouros: React.FC = () => {
                                                             <th>12211123</th>
                                                         </tr> 
                                                           
-                                                </BplanBody>
+                                                </TableBody>
                                             </table>
-                                        </BplanItens>
-                                    </ScrollbarBplan>
-                                    <BplanButtons>
-                                        <BplanButtonsContent>
-                                            <BplanButtonsDiv>
+                                        </TableItens>
+                                    </TableScrollbar>
+                                    <InteractiveButtons>
+                                        <InteractiveButtonsContent>
+                                            <InteractiveButtonsDiv>
                                                 <Button variant="contained">Incluir</Button>
-                                            </BplanButtonsDiv>
-                                            <BplanButtonsDiv>
+                                            </InteractiveButtonsDiv>
+                                            <InteractiveButtonsDiv>
                                                 <Button variant="contained"><FiTrash2/>Excluir</Button>
-                                            </BplanButtonsDiv>
-                                            <BplanButtonsDiv>
+                                            </InteractiveButtonsDiv>
+                                            <InteractiveButtonsDiv>
                                                 <Button variant="contained"><FiCheck/>Confirmar</Button>
-                                            </BplanButtonsDiv>
-                                            <BplanButtonsDiv>
+                                            </InteractiveButtonsDiv>
+                                            <InteractiveButtonsDiv>
                                                 <Button variant="contained"><FiCircle/>Renovar</Button>
-                                            </BplanButtonsDiv>
-                                            <BplanButtonsDiv>
+                                            </InteractiveButtonsDiv>
+                                            <InteractiveButtonsDiv>
                                                 <Button variant="contained"><AiOutlineClose/>Fechar</Button>
-                                            </BplanButtonsDiv>
-                                        </BplanButtonsContent>
-                                    </BplanButtons>
-                                </BplanInfo>
-                            </BplanContentContainer>
-                        </BplanContent>
+                                            </InteractiveButtonsDiv>
+                                        </InteractiveButtonsContent>
+                                    </InteractiveButtons>
+                                </ContentInfo>
+                            </ContentContainer>
+                        </BottomContent>
                     </MainContent>
                 </Content>
             </SubContainer>

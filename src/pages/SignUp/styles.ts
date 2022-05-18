@@ -22,6 +22,10 @@ export const Content = styled.div`
             font-size: 16px;
             margin-top: 15px;
             color: #c6c6c6;
+
+            @media (min-width: 1200px) {
+                display: none;
+            }
         }
 
        div {
