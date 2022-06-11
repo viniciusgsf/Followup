@@ -21,12 +21,16 @@ import States from "../../pages/Cadastro/States";
 import SubFonts from "../../pages/Cadastro/SubFonts";
 import TiposLogradouro from "../../pages/Cadastro/TiposLogradouro";
 import TreatmentForm from "../../pages/Cadastro/TreatmentForm";
+import AddCountry from "../../pages/Cadastro/Countries/AddCountry";
+
+
 
 const CadastroRoutes: React.FC = ( ) => (
         <Switch>
             <Route path="/bairros"  isPrivate component={Bairros} />
             <Route path="/businessPlan"  isPrivate component={BusinessPlan} />
-            <Route path="/countries"  isPrivate component={Countries} /> 
+            <Route path='/countries/add' isPrivate component={AddCountry} />
+            <Route path="/countries"  isPrivate component={Countries} />             
             <Route path="/estagios"  isPrivate component={Estagios} /> 
             <Route path="/fonts"  isPrivate component={Fonts} /> 
             <Route path="/functions"  isPrivate component={Functions} /> 

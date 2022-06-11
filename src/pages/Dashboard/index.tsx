@@ -1,7 +1,6 @@
 import React from "react";
 
 import PublicSidebar from "../../assets/components/PublicSidebar";
-import TopBar from "../../assets/components/topBar";
 
 import {Container, SubContainer, Content, GridContainer, GridItems, SmallGrid, BigGrid, SideGrid} from './styles';
 

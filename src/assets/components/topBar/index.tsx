@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FiAlignJustify, FiBell, FiPower, FiUsers } from "react-icons/fi";
 import { useAuth } from "../../../hooks/AuthContext";

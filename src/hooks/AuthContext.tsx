@@ -33,6 +33,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         const user = localStorage.getItem('@Followup:user');
 
         if (token && user) {
+            api.defaults.headers.authorization = `Bearer ${token}`;
             return { token, user: JSON.parse(user)};
         }
 
@@ -48,6 +49,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         const { token, user } = response.data;
         localStorage.setItem('@Followup:token', token);
         localStorage.setItem('@Followup:user', JSON.stringify(user));
+
+        api.defaults.headers.authorization = `Bearer ${token}`;
 
         setData({ token, user});
         console.log(response.data);

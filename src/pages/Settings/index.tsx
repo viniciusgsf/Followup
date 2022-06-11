@@ -22,7 +22,7 @@ interface ProfileFormData {
 
 const Settings: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { user, updateUser } = useAuth();
+  //const { user, updateUser } = useAuth();
 
     const handlePasswordSubmit = useCallback( async (data: ProfileFormData) => {
       try {
