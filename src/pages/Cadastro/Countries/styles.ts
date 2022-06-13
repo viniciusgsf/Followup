@@ -187,6 +187,10 @@ export const TableCheckbox = styled.th`
             padding: 9px;
             color: rgb(101, 116, 139);
         }
+
+        svg {
+            margin-left: 10px;
+        }
 `;
 
 export const TableBody = styled.tbody `
