@@ -1,4 +1,4 @@
-import { Button, Checkbox,} from "@mui/material";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FiCheck, FiCircle, FiSearch } from "react-icons/fi";
@@ -22,6 +22,7 @@ const Countries: React.FC = () => {
 
     const [paises, setPaises] = useState<Country[]>([])
     const [loading, setLoading] = useState(true);
+    const [open, setOpen] = useState(false);
     const history = useHistory();
     
     useEffect(() => {
@@ -29,8 +30,7 @@ const Countries: React.FC = () => {
         let response = await api.get<Country[]>("countries")        
 
         setPaises(response.data)
-        setLoading(false);
-        
+        setLoading(false);  
     }
 
     fetchMyAPI()
@@ -42,15 +42,21 @@ const Countries: React.FC = () => {
 
     const handleDeleteCountry = async (pais:string) => {
        
-
         await api.delete(`/countries/${pais}`)
         let response = await api.get<Country[]>("countries")
         setPaises(response.data)
         setLoading(false);
-        
-        
-       
+        setOpen(false);
+         
     }
+
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+      };
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     return (
@@ -105,7 +111,29 @@ const Countries: React.FC = () => {
                                                             <tr key={pais.id}>
                                                                 <TableCheckbox>
                                                                     <span>
-                                                                    <DeleteIcon  onClick={()=>{handleDeleteCountry(pais.id)}}></DeleteIcon >
+                                                                    <DeleteIcon  onClick={handleClickOpen}>
+                                                                    </DeleteIcon >
+                                                                    <Dialog
+                                                                        open={open}
+                                                                        onClose={handleClose}
+                                                                        aria-labelledby="alert-dialog-title"
+                                                                        aria-describedby="alert-dialog-description"
+                                                                    >
+                                                                        <DialogTitle id="alert-dialog-title">
+                                                                        {"Tem certeza que quer excluir esse país?"}
+                                                                        </DialogTitle>
+                                                                        <DialogContent>
+                                                                        <DialogContentText id="alert-dialog-description">
+                                                                            Clique em Corcordo se você deseja excluir o país selecionado
+                                                                        </DialogContentText>
+                                                                        </DialogContent>
+                                                                        <DialogActions>
+                                                                        <Button onClick={handleClose}>Cancelar</Button>
+                                                                        <Button onClick={()=>{handleDeleteCountry(pais.id)}} autoFocus>
+                                                                            Concordo
+                                                                        </Button>
+                                                                        </DialogActions>
+                                                                    </Dialog>
                                                                     </span>
                                                                 </TableCheckbox>
                                                                 <th>{pais.id}</th>
