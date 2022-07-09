@@ -45,6 +45,7 @@ const Countries: React.FC = () => {
         console.log('handleDeleteCountry')
 
         await api.delete(`/countries/${pais}`)
+
     }
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
