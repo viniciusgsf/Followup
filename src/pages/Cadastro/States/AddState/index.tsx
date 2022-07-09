@@ -50,6 +50,7 @@ const AddStates: React.FC = () => {
     const resp = await api.get(`/countries`);
     const respData = resp.data;
     setPaises(respData);
+    setCountry(respData[0].id);
 }
 
 
@@ -64,8 +65,7 @@ const AddStates: React.FC = () => {
 
   const formRef = useRef<FormHandles>(null);
     const handleSubmit = useCallback( async (data: StateFormData) => {
-      
-      console.log(country);
+            
       data.country_id = country;
 
       try {
