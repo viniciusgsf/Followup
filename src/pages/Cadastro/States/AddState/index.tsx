@@ -1,0 +1,157 @@
+import React, { useCallback, useEffect, useRef, useState} from "react";
+import SideBar from '../../../../assets/components/AuthSidebar';
+import TopBar from "../../../../assets/components/topBar";
+import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer } from './styles';
+import api from "../../../../services/apiClient";
+import CompButton from "../../../../assets/components/Button";
+import { Form } from '@unform/web';
+import * as Yup from 'yup'; 
+import { FormHandles } from "@unform/core";
+import Input from "../../../../assets/components/input";
+import getValidationErrors from "../../../../utils/getValidationErrors";
+import Alert from '@mui/material/Alert';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Snackbar } from "@mui/material";
+import { Link, useHistory } from "react-router-dom";
+
+
+interface StateFormData {
+  name: string;  
+  id: string;
+  country_id: string;
+}
+
+interface Country {
+  id: string;
+  name: string;
+}
+
+const AddStates: React.FC = () => {
+  const history = useHistory();
+  const [isSaved, setIsSaved] = useState(false);
+  const [paises, setPaises] = useState<Country[]>([]);
+
+  const [state, setState] = React.useState('');
+  const [country, setCountry] = React.useState('');
+
+  useEffect(() => {
+    SetCountriesList();
+  }, []);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setCountry(event.target.value as string);
+    
+  };
+
+  const handleStateChange = (event: { target: { value: string; }; }) => {
+    setState(event.target.value as string);
+  };
+  
+  const SetCountriesList = async () => {
+    const resp = await api.get(`/countries`);
+    const respData = resp.data;
+    setPaises(respData);
+}
+
+
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setIsSaved(false);
+    
+  };
+
+  const formRef = useRef<FormHandles>(null);
+    const handleSubmit = useCallback( async (data: StateFormData) => {
+
+        console.log(data)
+
+      try {
+          formRef.current?.setErrors({});
+          const schema = Yup.object().shape({
+              name: Yup.string().required('Nome obrigatório'),   
+              country_id: Yup.string().required('Codigo obrigatório'),             
+          });
+          await schema.validate(data, {
+              abortEarly: false,       
+            });
+    
+          await api.post('/states', data);
+          setIsSaved(true)
+          history.push('/states')
+      } catch (err) {
+            if (err instanceof Yup.ValidationError) {
+              const errors = getValidationErrors(err);
+              formRef.current?.setErrors(errors);
+              return;
+            }
+          }
+    }, [history]);
+    
+    
+    return (
+      <>
+        <Container>
+          <SubContainer>
+            <Content>
+              <MainContent>
+                <TopContent>
+                  <Topside>
+                    <h4>Estados</h4>
+                    <Link to="/states">
+                      <h2>Voltar</h2>
+                    </Link>
+                  </Topside>
+                  <BottomSide>
+                    <BottomContainer>
+                      <Form ref={formRef} onSubmit={handleSubmit}>                           
+
+                        <Input name="name" value={state} onChange={handleStateChange} placeholder="Nome do estado" />  
+
+                        <Box sx={{ minWidth: 120 }}>
+                          <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Estado</InputLabel>
+                            {paises.length > 0 &&
+                            <Select
+                              name="country_id"
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              defaultValue={paises[0].id}
+                              label="País"
+                              onChange={handleChange}
+                            >
+
+                              {paises.map((pais) => {
+                                return (
+                                  <MenuItem key={pais.id} value={pais.id}>{pais.name}</MenuItem>
+                                )
+                              } )}
+
+                            </Select>
+                            }
+                          </FormControl>
+                        </Box>                      
+
+                        <CompButton type="submit">Cadastrar</CompButton>                        
+
+                      </Form>
+                    </BottomContainer>
+                  </BottomSide>
+                </TopContent>
+              </MainContent>
+            </Content>
+          </SubContainer>
+        </Container>
+        <SideBar />
+        <TopBar/>
+        <Snackbar open={isSaved} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          País gravado com sucesso.
+        </Alert>
+      </Snackbar>
+      </>
+    )
+}
+
+export default AddStates;
