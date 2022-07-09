@@ -34,66 +34,52 @@ const States: React.FC = () => {
     
     useEffect(() => {
         async function fetchMyAPI() {        
-        let response = await api.get<IStates[]>("")        
+            SetCountriesList();
 
-        setStates(response.data)
-        setLoading(false);  
-    }
+            if(country){
+                //const response = await api.get<IStates[]>("")        
+                //setStates(response.data)                
+                setLoading(false);  
+            }            
+        }
 
-    fetchMyAPI()
+        fetchMyAPI()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    useEffect(() => {
-        SetCountriesList();
-      }, []);
-
-    //   useEffect(() => {
-    //     getState();
-    //   }, []);
-
+    
     useEffect(() => { 
-        getState(country);
-    }, [country])
-
-    useEffect(() => { 
-        getStateId(country);
-    }, [country])
+        getStates(country);
+     }, [country])
     
     const SetCountriesList = async () => {
       const resp = await api.get(`/countries`);
       const respData = resp.data;
       setPaises(respData);
+      setCountry(respData[0].id);
   }
 
-    const getState = async (country: string) => {
-        console.log(country);
+    const getStates = async (country: string) => {
+        if(country){
         const resp = await api.get(`/states/${country}`);
         const respData = resp.data;
-        setPaises(respData);
-    }
-
-    const getStateId = async (country: string) => {
-        console.log(country);
-        const resp = await api.get(`/states/${country}`);
-        const respData = resp.data;
-        setPaises(respData);
+        setStates(respData);
+        setLoading(false);
+        }
     }
     
-    const handleCreate = () => {
+    const handleCreateState = () => {
         history.push('/states/add')
     }
 
-    const handleChange = (event: SelectChangeEvent) => {
-        console.log(event.target.value)
+    const handleCountryChange = (event: SelectChangeEvent) => {        
         setCountry(event.target.value as string);
-    
       };
 
     const handleDeleteState = async (state:string) => {
-       
+               
         await api.delete(`/states/${state}`)
-        let response = await api.get<IStates[]>("states")
-        setStates(response.data)
+        
+        setStates(states.filter(s => s.id !== state))
         setLoading(false);
         setOpen(false);
          
@@ -133,7 +119,7 @@ const States: React.FC = () => {
                                                 id="demo-simple-select"
                                                 defaultValue={paises[0].id}
                                                 label="País"
-                                                onChange={handleChange}
+                                                onChange={handleCountryChange}
                                                 >
 
                                                 {paises.map((pais) => {
@@ -166,12 +152,12 @@ const States: React.FC = () => {
                                                             </span>
                                                         </TableCheckbox>
                                                         
-                                                        <th>Nome</th>
+                                                        
                                                         <th>Nome do País</th>
                                                     </tr>
                                                 </thead>
                                                 <TableBody>
-                                                        <tr>
+                                                        
                                                         { states.map(state => {
                                                         return (
                                                             <tr key={state.id}>
@@ -202,17 +188,12 @@ const States: React.FC = () => {
                                                                     </Dialog>
                                                                     </span>
                                                                 </TableCheckbox>
-                                                                <th>{state.id}</th>
+                                                                
                                                                 <th>{state.name}</th>
                                                                 
-                                                            </tr>                                                            
-                                                            
+                                                            </tr>                                                         
                                                         )
-                                                        }) }
-                                                            
-                                                            
-                                                        </tr> 
-                                                          
+                                                        }) }                                                          
                                                 </TableBody>
                                             </table>
                                         </TableItens>
@@ -221,7 +202,7 @@ const States: React.FC = () => {
                                     <InteractiveButtons>
                                         <InteractiveButtonsContent>
                                             <InteractiveButtonsDiv>
-                                                <Button variant="contained" onClick={handleCreate}>Incluir</Button>
+                                                <Button variant="contained" onClick={handleCreateState}>Incluir</Button>
                                             </InteractiveButtonsDiv>
                                             
                                             <InteractiveButtonsDiv>
