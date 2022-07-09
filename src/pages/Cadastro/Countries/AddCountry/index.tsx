@@ -8,11 +8,11 @@ import { Form } from '@unform/web';
 import * as Yup from 'yup'; 
 import { FormHandles } from "@unform/core";
 import Input from "../../../../assets/components/input";
-import { FiUser} from 'react-icons/fi';
+import {FaGlobeAmericas} from "react-icons/fa";
 import getValidationErrors from "../../../../utils/getValidationErrors";
 import Alert from '@mui/material/Alert';
 import { Snackbar } from "@mui/material";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 interface CountryFormData {
   name: string;  
@@ -66,12 +66,15 @@ const AddCountry: React.FC = () => {
                 <TopContent>
                   <Topside>
                     <h4>Países</h4>
+                    <Link to="/countries">
+                      <h2>Voltar</h2>
+                    </Link>
                   </Topside>
                   <BottomSide>
                     <BottomContainer>
                       <Form ref={formRef} onSubmit={handleSubmit}>                           
 
-                        <Input name="name" icon={FiUser} placeholder="Nome" />                       
+                        <Input name="name" icon={FaGlobeAmericas} placeholder="Digite o país..." />                       
 
                         <CompButton type="submit">Cadastrar</CompButton>                        
 
