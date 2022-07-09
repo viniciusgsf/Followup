@@ -85,6 +85,14 @@ export const BottomInputs = styled.div `
             flex-direction: column;
         }
     }
+
+    div {
+        width: 100%;
+        height: 52px;
+        border-radius: 7px;
+        margin-top: 5px;
+
+    }
 `;
 
 export const ButtonDiv = styled.div`

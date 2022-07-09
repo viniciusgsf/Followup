@@ -39,6 +39,7 @@ const Countries: React.FC = () => {
         history.push('/countries/add')
     }
 
+    
     const handleDeleteCountry = async (pais:string) => {
        
         await api.delete(`/countries/${pais}`)

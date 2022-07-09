@@ -1,15 +1,13 @@
-import { Button, Checkbox } from "@mui/material";
+import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { FiCheck, FiCircle, FiSearch, FiTrash2 } from "react-icons/fi";
-
-import SearchInput from "../../../assets/components/SearchInput";
-
+import { FiCheck, FiCircle, } from "react-icons/fi";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import SideBar from '../../../assets/components/AuthSidebar';
 import TopBar from "../../../assets/components/topBar";
 
-import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer , BottomInputs, ButtonDiv, BottomContent, ContentContainer, ContentInfo,
+import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer , BottomInputs, BottomContent, ContentContainer, ContentInfo,
     TableScrollbar, TableItens, TableCheckbox, TableBody, InteractiveButtons, InteractiveButtonsContent, InteractiveButtonsDiv
 } from './styles';
 import { useHistory } from "react-router-dom";
@@ -20,33 +18,82 @@ interface IStates {
     name: string;
 }
 
+interface Country {
+    id: string;
+    name: string;
+  }
+
 const States: React.FC = () => {
 
-    const [paises, setPaises] = useState<IStates[]>([])
+    const [states, setStates] = useState<IStates[]>([])
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
+    const [country, setCountry] = React.useState('');
+    const [paises, setPaises] = useState<Country[]>([]);
     const history = useHistory();
     
     useEffect(() => {
         async function fetchMyAPI() {        
-        let response = await api.get<IStates[]>("countries")        
+        let response = await api.get<IStates[]>("")        
 
-        setPaises(response.data)
+        setStates(response.data)
         setLoading(false);  
     }
 
     fetchMyAPI()
     }, [])
 
+    useEffect(() => {
+        SetCountriesList();
+      }, []);
+
+    //   useEffect(() => {
+    //     getState();
+    //   }, []);
+
+    useEffect(() => { 
+        getState(country);
+    }, [country])
+
+    useEffect(() => { 
+        getStateId(country);
+    }, [country])
+    
+    const SetCountriesList = async () => {
+      const resp = await api.get(`/countries`);
+      const respData = resp.data;
+      setPaises(respData);
+  }
+
+    const getState = async (country: string) => {
+        console.log(country);
+        const resp = await api.get(`/states/${country}`);
+        const respData = resp.data;
+        setPaises(respData);
+    }
+
+    const getStateId = async (country: string) => {
+        console.log(country);
+        const resp = await api.get(`/states/${country}`);
+        const respData = resp.data;
+        setPaises(respData);
+    }
+    
     const handleCreate = () => {
         history.push('/states/add')
     }
 
-    const handleDeleteCountry = async (pais:string) => {
+    const handleChange = (event: SelectChangeEvent) => {
+        console.log(event.target.value)
+        setCountry(event.target.value as string);
+    
+      };
+
+    const handleDeleteState = async (state:string) => {
        
-        await api.delete(`/countries/${pais}`)
+        await api.delete(`/states/${state}`)
         let response = await api.get<IStates[]>("states")
-        setPaises(response.data)
+        setStates(response.data)
         setLoading(false);
         setOpen(false);
          
@@ -75,12 +122,30 @@ const States: React.FC = () => {
                                 <BottomContainer>
                                     <BottomInputs>
                                         <label>
-                                            <ButtonDiv>
-                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="UF"/>
-                                            </ButtonDiv>    
-                                            <ButtonDiv>
-                                            <SearchInput name="description" icon={FiSearch} type="text" placeholder="Nome"/>
-                                            </ButtonDiv>
+                                            
+                                            <Box sx={{ minWidth: 120 }}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">País</InputLabel>
+                                                {paises.length > 0 &&
+                                                <Select
+                                                name="country_id"
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                defaultValue={paises[0].id}
+                                                label="País"
+                                                onChange={handleChange}
+                                                >
+
+                                                {paises.map((pais) => {
+                                                    return (
+                                                    <MenuItem key={pais.id} value={pais.id}>{pais.name}</MenuItem>
+                                                    )
+                                                } )}
+
+                                                </Select>
+                                                }
+                                            </FormControl>
+                                            </Box> 
                                         </label>
                                     </BottomInputs>
                                 </BottomContainer>
@@ -90,6 +155,7 @@ const States: React.FC = () => {
                             <ContentContainer>
                                 <ContentInfo> 
                                     <TableScrollbar>
+                                    {loading ? (<TableItens></TableItens>): 
                                         <TableItens>
                                             <table>
                                                 <thead>
@@ -99,26 +165,58 @@ const States: React.FC = () => {
                                                                 <Checkbox {...label} />
                                                             </span>
                                                         </TableCheckbox>
-                                                        <th>UF</th>
+                                                        
                                                         <th>Nome</th>
                                                         <th>Nome do País</th>
                                                     </tr>
                                                 </thead>
                                                 <TableBody>
                                                         <tr>
-                                                            <TableCheckbox>
-                                                                <span>
-                                                                    <Checkbox {...label} />
-                                                                </span>
-                                                            </TableCheckbox>
-                                                            <th>SP</th>
-                                                            <th>São Paulo</th>
-                                                            <th>Brasil</th>
+                                                        { states.map(state => {
+                                                        return (
+                                                            <tr key={state.id}>
+                                                                <TableCheckbox>
+                                                                    <span>
+                                                                    <DeleteIcon  onClick={handleClickOpen}>
+                                                                    </DeleteIcon >
+                                                                    <Dialog
+                                                                        open={open}
+                                                                        onClose={handleClose}
+                                                                        aria-labelledby="alert-dialog-title"
+                                                                        aria-describedby="alert-dialog-description"
+                                                                    >
+                                                                        <DialogTitle id="alert-dialog-title">
+                                                                        {"Tem certeza que quer excluir esse país?"}
+                                                                        </DialogTitle>
+                                                                        <DialogContent>
+                                                                        <DialogContentText id="alert-dialog-description">
+                                                                            Clique em Sim se você deseja excluir o país selecionado
+                                                                        </DialogContentText>
+                                                                        </DialogContent>
+                                                                        <DialogActions>
+                                                                        <Button onClick={handleClose}>Cancelar</Button>
+                                                                        <Button onClick={()=>{handleDeleteState(state.id)}} autoFocus>
+                                                                            Sim
+                                                                        </Button>
+                                                                        </DialogActions>
+                                                                    </Dialog>
+                                                                    </span>
+                                                                </TableCheckbox>
+                                                                <th>{state.id}</th>
+                                                                <th>{state.name}</th>
+                                                                
+                                                            </tr>                                                            
+                                                            
+                                                        )
+                                                        }) }
+                                                            
+                                                            
                                                         </tr> 
                                                           
                                                 </TableBody>
                                             </table>
                                         </TableItens>
+                                        }
                                     </TableScrollbar>
                                     <InteractiveButtons>
                                         <InteractiveButtonsContent>

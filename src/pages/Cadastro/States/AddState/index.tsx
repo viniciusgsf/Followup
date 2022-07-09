@@ -39,7 +39,7 @@ const AddStates: React.FC = () => {
 
   const handleChange = (event: SelectChangeEvent) => {
     setCountry(event.target.value as string);
-    
+
   };
 
   const handleStateChange = (event: { target: { value: string; }; }) => {
@@ -64,8 +64,9 @@ const AddStates: React.FC = () => {
 
   const formRef = useRef<FormHandles>(null);
     const handleSubmit = useCallback( async (data: StateFormData) => {
-
-        console.log(data)
+      
+      console.log(country);
+      data.country_id = country;
 
       try {
           formRef.current?.setErrors({});
@@ -87,7 +88,7 @@ const AddStates: React.FC = () => {
               return;
             }
           }
-    }, [history]);
+    }, [country, history]);
     
     
     return (
@@ -147,7 +148,7 @@ const AddStates: React.FC = () => {
         <TopBar/>
         <Snackbar open={isSaved} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          País gravado com sucesso.
+          Estado gravado com sucesso.
         </Alert>
       </Snackbar>
       </>
