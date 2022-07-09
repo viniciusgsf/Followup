@@ -13,7 +13,7 @@ import {Container, SubContainer, Content, MainContent, TopContent, Topside, Bott
     TableScrollbar, TableItens, TableCheckbox, TableBody, InteractiveButtons, InteractiveButtonsContent, InteractiveButtonsDiv
 } from './styles';
 
-const TiposLogradouro: React.FC = () => {
+const PublicPlaceTypes: React.FC = () => {
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     return (
         <>
@@ -23,14 +23,14 @@ const TiposLogradouro: React.FC = () => {
                     <MainContent>
                         <TopContent>
                             <Topside>
-                                <h4>Tipos de Logradouro</h4>
+                                <h4>Tipos de PublicPlace</h4>
                             </Topside>
                             <BottomSide>
                                 <BottomContainer>
                                     <BottomInputs>
                                         <label>
                                             <ButtonDiv>
-                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Tipos de Logradouro"/>
+                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Tipos de PublicPlace"/>
                                             </ButtonDiv>    
                                             <ButtonDiv>
                                             <SearchInput name="description" icon={FiSearch} type="text" placeholder="Abreviatura"/>
@@ -53,7 +53,7 @@ const TiposLogradouro: React.FC = () => {
                                                                 <Checkbox {...label} />
                                                             </span>
                                                         </TableCheckbox>
-                                                        <th>Tipos de Logradouro</th>
+                                                        <th>Tipos de PublicPlace</th>
                                                         <th>Abreviatura</th>
                                                     </tr>
                                                 </thead>
@@ -104,4 +104,4 @@ const TiposLogradouro: React.FC = () => {
     )
 }
 
-export default TiposLogradouro;
+export default PublicPlaceTypes;

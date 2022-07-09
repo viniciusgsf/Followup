@@ -90,15 +90,15 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-                        <Link to="logradouros">
+                        <Link to="publicPlace">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Logradouros" />
                           </ListItemButton>
                         </Link>
 
-                        <Link to="tiposLogradouro">
+                        <Link to="PublicPlaceTypes">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Tipo de Logradouro" />
+                              <ListItemText primary="Tipo de Logradouros" />
                           </ListItemButton>
                         </Link>
 

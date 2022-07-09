@@ -1,5 +1,5 @@
 import { Button, Checkbox } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FiCheck, FiCircle, FiSearch, FiTrash2 } from "react-icons/fi";
 
@@ -12,8 +12,54 @@ import TopBar from "../../../assets/components/topBar";
 import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer , BottomInputs, ButtonDiv, BottomContent, ContentContainer, ContentInfo,
     TableScrollbar, TableItens, TableCheckbox, TableBody, InteractiveButtons, InteractiveButtonsContent, InteractiveButtonsDiv
 } from './styles';
+import { useHistory } from "react-router-dom";
+import api from "../../../services/apiClient";
+
+interface IStates {
+    id: string;
+    name: string;
+}
 
 const States: React.FC = () => {
+
+    const [paises, setPaises] = useState<IStates[]>([])
+    const [loading, setLoading] = useState(true);
+    const [open, setOpen] = useState(false);
+    const history = useHistory();
+    
+    useEffect(() => {
+        async function fetchMyAPI() {        
+        let response = await api.get<IStates[]>("countries")        
+
+        setPaises(response.data)
+        setLoading(false);  
+    }
+
+    fetchMyAPI()
+    }, [])
+
+    const handleCreate = () => {
+        history.push('/states/add')
+    }
+
+    const handleDeleteCountry = async (pais:string) => {
+       
+        await api.delete(`/countries/${pais}`)
+        let response = await api.get<IStates[]>("states")
+        setPaises(response.data)
+        setLoading(false);
+        setOpen(false);
+         
+    }
+
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+      };
+
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     return (
         <>
@@ -77,11 +123,9 @@ const States: React.FC = () => {
                                     <InteractiveButtons>
                                         <InteractiveButtonsContent>
                                             <InteractiveButtonsDiv>
-                                                <Button variant="contained">Incluir</Button>
+                                                <Button variant="contained" onClick={handleCreate}>Incluir</Button>
                                             </InteractiveButtonsDiv>
-                                            <InteractiveButtonsDiv>
-                                                <Button variant="contained"><FiTrash2/>Excluir</Button>
-                                            </InteractiveButtonsDiv>
+                                            
                                             <InteractiveButtonsDiv>
                                                 <Button variant="contained"><FiCheck/>Confirmar</Button>
                                             </InteractiveButtonsDiv>

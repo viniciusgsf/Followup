@@ -1,6 +1,5 @@
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
 import { FiCheck, FiCircle, FiSearch } from "react-icons/fi";
 import SearchInput from "../../../assets/components/SearchInput";
 import SideBar from '../../../assets/components/AuthSidebar';
@@ -124,13 +123,13 @@ const Countries: React.FC = () => {
                                                                         </DialogTitle>
                                                                         <DialogContent>
                                                                         <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Corcordo se você deseja excluir o país selecionado
+                                                                            Clique em Sim se você deseja excluir o país selecionado
                                                                         </DialogContentText>
                                                                         </DialogContent>
                                                                         <DialogActions>
                                                                         <Button onClick={handleClose}>Cancelar</Button>
                                                                         <Button onClick={()=>{handleDeleteCountry(pais.id)}} autoFocus>
-                                                                            Concordo
+                                                                            Sim
                                                                         </Button>
                                                                         </DialogActions>
                                                                     </Dialog>
@@ -159,9 +158,7 @@ const Countries: React.FC = () => {
                                             <InteractiveButtonsDiv>
                                                 <Button variant="contained"><FiCircle/>Renovar</Button>
                                             </InteractiveButtonsDiv>
-                                            <InteractiveButtonsDiv>
-                                                <Button variant="contained"><AiOutlineClose/>Fechar</Button>
-                                            </InteractiveButtonsDiv>
+                                        
                                         </InteractiveButtonsContent>
                                     </InteractiveButtons>
                                 </ContentInfo>
