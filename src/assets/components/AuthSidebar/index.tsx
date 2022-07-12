@@ -138,7 +138,7 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-                        <Link to="locals">
+                        <Link to="locations">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Localidades" />
                           </ListItemButton>

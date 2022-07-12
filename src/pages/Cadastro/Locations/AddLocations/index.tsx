@@ -20,22 +20,37 @@ interface StateFormData {
   country_id: string;
 }
 
+interface IStates {
+  id: string;
+  name: string;
+}
+
 interface Country {
   id: string;
   name: string;
 }
 
-const AddStates: React.FC = () => {
+const AddLocation: React.FC = () => {
   const history = useHistory();
   const [isSaved, setIsSaved] = useState(false);
-  const [paises, setPaises] = useState<Country[]>([]);
 
-  const [state, setState] = React.useState('');
+  const [paises, setPaises] = useState<Country[]>([]);
   const [country, setCountry] = React.useState('');
+
+  const [states, setStates] = useState<IStates[]>([])
+  const [state, setState] = React.useState('');
+
 
   useEffect(() => {
     SetCountriesList();
   }, []);
+
+      
+  useEffect(() => { 
+    getStates(country);
+ }, [country])
+
+
 
   const handleChange = (event: SelectChangeEvent) => {
     setCountry(event.target.value as string);
@@ -47,11 +62,22 @@ const AddStates: React.FC = () => {
   };
   
   const SetCountriesList = async () => {
+    
     const resp = await api.get(`/countries`);
     const respData = resp.data;
     setPaises(respData);
     setCountry(respData[0].id);
+    
 }
+
+const getStates = async (country: string) => {
+  if(country){
+  const resp = await api.get(`/states/${country}`);
+  const respData = resp.data;
+  setStates(respData);
+  }
+}
+
 
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -78,9 +104,9 @@ const AddStates: React.FC = () => {
               abortEarly: false,       
             });
     
-          await api.post('/states', data);
+          await api.post('/locations', data);
           setIsSaved(true)
-          history.push('/states')
+          history.push('/locations')
       } catch (err) {
             if (err instanceof Yup.ValidationError) {
               const errors = getValidationErrors(err);
@@ -99,7 +125,7 @@ const AddStates: React.FC = () => {
               <MainContent>
                 <TopContent>
                   <Topside>
-                    <h4>Estados</h4>
+                    <h4>Cidades</h4>
                     <Link to="/states">
                       <h2>Voltar</h2>
                     </Link>
@@ -108,7 +134,7 @@ const AddStates: React.FC = () => {
                     <BottomContainer>
                       <Form ref={formRef} onSubmit={handleSubmit}>                           
 
-                        <Input name="name" value={state} onChange={handleStateChange} placeholder="Nome do estado" />  
+                        <Input name="name" value={state} onChange={handleStateChange} placeholder="Nome da cidade" />  
 
                         <Box sx={{ minWidth: 120 }}>
                           <FormControl fullWidth>
@@ -128,7 +154,29 @@ const AddStates: React.FC = () => {
                                   <MenuItem key={pais.id} value={pais.id}>{pais.name}</MenuItem>
                                 )
                               } )}
+      
+                            </Select>
+                            }
+                          </FormControl>
+                        </Box>    
+                        <Box sx={{ minWidth: 120 }}>
+                          <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Estado</InputLabel>
+                            {states.length > 0 &&
+                            <Select
+                              name="state_id"
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              label="País"
+                              onChange={handleChange}
+                            >
 
+                              {states.map((state) => {
+                                return (
+                                  <MenuItem key={state.id} value={state.id}>{state.name}</MenuItem>
+                                )
+                              } )}
+      
                             </Select>
                             }
                           </FormControl>
@@ -155,4 +203,4 @@ const AddStates: React.FC = () => {
     )
 }
 
-export default AddStates;
+export default AddLocation;

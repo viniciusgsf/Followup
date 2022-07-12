@@ -9,7 +9,7 @@ import Countries from "../../pages/Cadastro/Countries";
 import Estagios from "../../pages/Cadastro/Estagios";
 import Fonts from "../../pages/Cadastro/Fonts";
 import Functions from "../../pages/Cadastro/Functions";
-import Locals from "../../pages/Cadastro/Locals";
+import Locations from "../../pages/Cadastro/Locations";
 import PublicPlace from "../../pages/Cadastro/PublicPlace";
 import Nationalities from "../../pages/Cadastro/Nationalities";
 import PhoneTypes from "../../pages/Cadastro/PhoneTypes";
@@ -25,6 +25,7 @@ import TreatmentForm from "../../pages/Cadastro/TreatmentForm";
 import AddStates from "../../pages/Cadastro/States/AddState";
 import AddCountry from "../../pages/Cadastro/Countries/AddCountry";
 import AddPublicPlace from "../../pages/Cadastro/PublicPlace/AddPublicPlace";
+import AddLocations from "../../pages/Cadastro/Locations/AddLocations";
 
 
 
@@ -38,8 +39,10 @@ const CadastroRoutes: React.FC = ( ) => (
 
             <Route path="/estagios"  isPrivate component={Estagios} /> 
             <Route path="/fonts"  isPrivate component={Fonts} /> 
-            <Route path="/functions"  isPrivate component={Functions} /> 
-            <Route path="/locals"  isPrivate component={Locals} /> 
+            <Route path="/functions"  isPrivate component={Functions} />
+
+             <Route path='/locations/add' isPrivate component={AddLocations} />
+            <Route path="/locations"  isPrivate component={Locations} /> 
 
             <Route path='/publicPlace/add' isPrivate component={AddPublicPlace} />
             <Route path="/publicPlace"  isPrivate component={PublicPlace} /> 
