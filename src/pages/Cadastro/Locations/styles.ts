@@ -79,12 +79,12 @@ export const BottomInputs = styled.div `
 
     label {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
 
         div {
             height: 52px;
             width: 100%;
-            margin-top: 0;
+            margin-bottom: 10px;
             
         }
 

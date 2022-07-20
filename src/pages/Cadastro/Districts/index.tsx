@@ -23,7 +23,7 @@ interface Country {
     name: string;
   }
 
-const Locations: React.FC = () => {
+const Districts: React.FC = () => {
 
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
@@ -35,6 +35,10 @@ const Locations: React.FC = () => {
     const [paises, setPaises] = useState<Country[]>([]);
 
     const [locations, setLocations] = useState<IStates[]>([]);
+    const [locationsList, setLocationsList] = React.useState('');
+
+    const [districs, setDistricts] = useState<IStates[]>([]);
+
     const history = useHistory();
     
     useEffect(() => {
@@ -60,6 +64,10 @@ const Locations: React.FC = () => {
      useEffect(() => { 
         getLocations(state);
      }, [state])
+     useEffect(() => { 
+        getDistricts(locationsList);
+     }, [locationsList])
+    
     
     const SetCountriesList = async () => {
       const resp = await api.get(`/countries`);
@@ -68,12 +76,6 @@ const Locations: React.FC = () => {
       setCountry(respData[0].id);
       
   }
-//   const SetLocationsList = async () => {
-//     const resp = await api.get(`/locations`);
-//     const respData = resp.data;
-//     setLocation(respData);
-//     setState(respData[0].id);
-// }
 
     const getStates = async (country: string) => {
         if(country){
@@ -92,23 +94,37 @@ const Locations: React.FC = () => {
         setLoading(false);
         }
     }
+
+    const getDistricts = async (location: string) => {
+        if(location){
+        const resp = await api.get(`/districts/${location}`);
+        const respData = resp.data;
+        setDistricts(respData);
+        setLoading(false);
+        }
+    }
     
     const handleCreateState = () => {
-        history.push('/locations/add')
+        history.push('/districts/add')
     }
 
     const handleCountryChange = (event: SelectChangeEvent) => {        
         setCountry(event.target.value as string);
       };
-      const handleStateChange = (event: SelectChangeEvent) => {        
+    const handleStateChange = (event: SelectChangeEvent) => {        
         setState(event.target.value as string);
       };  
 
-    const handleDeleteLocation = async (location:string) => {
+    const handleLocationChange = (event: SelectChangeEvent) => {        
+        setLocationsList(event.target.value as string);
+    }; 
+    
+
+    const handleDeleteDistrict= async (district:string) => {
                
-        await api.delete(`/locations/${location}`)
+        await api.delete(`/districts/${district}`)
         
-        setLocations(locations.filter(s => s.id !== location))
+        setDistricts(districs.filter(s => s.id !== district))
         setLoading(false);
         setOpen(false);
          
@@ -132,7 +148,7 @@ const Locations: React.FC = () => {
                     <MainContent>
                         <TopContent>
                             <Topside>
-                                <h4>Cadastro de Localidades</h4>
+                                <h4>Cadastro de Bairros</h4>
                             </Topside>
                             <BottomSide>
                                 <BottomContainer>
@@ -162,6 +178,7 @@ const Locations: React.FC = () => {
                                                 }
                                             </FormControl>
                                             </Box> 
+
                                             <Box sx={{ minWidth: 120 }}>
                                             <FormControl fullWidth>
                                                 <InputLabel id="demo-simple-select-label">Estado</InputLabel>
@@ -171,7 +188,7 @@ const Locations: React.FC = () => {
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
                                                
-                                                label="País"
+                                                label="Estado"
                                                 onChange={handleStateChange}
                                                 >
 
@@ -185,6 +202,31 @@ const Locations: React.FC = () => {
                                                 }
                                             </FormControl>
                                             </Box> 
+
+                                            <Box sx={{ minWidth: 120 }}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Cidade</InputLabel>
+                                                {/* {locations.length > 0 && */}
+                                                <Select
+                                                name="location_id"
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                               
+                                                label="Cidade"
+                                                onChange={handleLocationChange}
+                                                >
+
+                                                {locations.map((location) => {
+                                                    return (
+                                                    <MenuItem key={location.id} value={location.id}>{location.name}</MenuItem>
+                                                    )
+                                                } )}
+
+                                                </Select>
+                                                {/* } */}
+                                            </FormControl>
+                                            </Box> 
+                                            
                                         </label>
                                         
                                     </BottomInputs>
@@ -207,14 +249,14 @@ const Locations: React.FC = () => {
                                                         </TableCheckbox>
                                                         
                                                         
-                                                        <th>Nome da cidade</th>
+                                                        <th>Nome do bairro</th>
                                                     </tr>
                                                 </thead>
                                                 <TableBody>
                                                         
-                                                        { locations.map(location => {
+                                                        { districs.map(distric => {
                                                         return (
-                                                            <tr key={location.id}>
+                                                            <tr key={distric.id}>
                                                                 <TableCheckbox>
                                                                     <span>
                                                                     <DeleteIcon  onClick={handleClickOpen}>
@@ -230,12 +272,12 @@ const Locations: React.FC = () => {
                                                                         </DialogTitle>
                                                                         <DialogContent>
                                                                         <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir a cidade selecionada
+                                                                            Clique em Sim se você deseja excluir o bairro selecionada
                                                                         </DialogContentText>
                                                                         </DialogContent>
                                                                         <DialogActions>
                                                                         <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeleteLocation(location.id)}} autoFocus>
+                                                                        <Button onClick={()=>{handleDeleteDistrict(distric.id)}} autoFocus>
                                                                             Sim
                                                                         </Button>
                                                                         </DialogActions>
@@ -243,7 +285,7 @@ const Locations: React.FC = () => {
                                                                     </span>
                                                                 </TableCheckbox>
                                                                 
-                                                                <th>{location.name}</th>
+                                                                <th>{distric.name}</th>
                                                                 
                                                             </tr>                                                         
                                                         )
@@ -283,4 +325,4 @@ const Locations: React.FC = () => {
     )
 }
 
-export default Locations;
+export default Districts;

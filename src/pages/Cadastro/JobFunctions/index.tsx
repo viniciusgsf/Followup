@@ -11,24 +11,24 @@ import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
 
 import DeleteIcon from '@mui/icons-material/Delete';
-interface IPublicPlaceType {
+interface IJobFunction {
     id: string;
     name: string;
 }
  
 
-const PublicPlaceTypes: React.FC = () => {
+const JobFunctions: React.FC = () => {
 
-    const [publicPlaceType, setPublicPlaceType] = useState<IPublicPlaceType[]>([])
+    const [jobFunction, setJobFunction] = useState<IJobFunction[]>([])
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const history = useHistory();
     
     useEffect(() => {
         async function fetchMyAPI() {        
-        let response = await api.get<IPublicPlaceType[]>("publicPlaceTypes")        
+        let response = await api.get<IJobFunction[]>("JobFunction")        
 
-        setPublicPlaceType(response.data)
+        setJobFunction(response.data)
         setLoading(false);  
     }
 
@@ -36,15 +36,15 @@ const PublicPlaceTypes: React.FC = () => {
     }, [])
 
     const handleCreate = () => {
-        history.push('/publicPlaceTypes/add')
+        history.push('/jobFunctions/add')
     }
 
     
-    const handleDeletePublicPlaceType= async (publicPlaceTypes:string) => {
+    const handleDeleteJobFunction= async (jobFunction:string) => {
        
-        await api.delete(`/publicPlaceTypes/${publicPlaceTypes}`)
-        let response = await api.get<IPublicPlaceType[]>("publicPlaceTypes")
-        setPublicPlaceType(response.data)
+        await api.delete(`/JobFunction/${jobFunction}`)
+        let response = await api.get<IJobFunction[]>("JobFunction")
+        setJobFunction(response.data)
         setLoading(false);
         setOpen(false);
          
@@ -67,14 +67,14 @@ const PublicPlaceTypes: React.FC = () => {
                     <MainContent>
                         <TopContent>
                             <Topside>
-                                <h4>Tipos de Logradouro</h4>
+                                <h4>Tipos de Função</h4>
                             </Topside>
                             <BottomSide>
                                 <BottomContainer>
                                     <BottomInputs>
                                         <label>
                                             <ButtonDiv>
-                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Código"/>
+                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Buscar..."/>
                                             </ButtonDiv>    
                                         
                                         </label>
@@ -97,16 +97,16 @@ const PublicPlaceTypes: React.FC = () => {
                                                             </span>
                                                         </TableCheckbox>
                                                         <th>Código</th>
-                                                        <th>Nome do País</th>
+                                                        <th>Tipo de função</th>
                                                     </tr>
                                                 </thead>
                                                 <TableBody>
                                                     <tr>
                                                        
                                                     </tr>
-                                                    { publicPlaceType.map(publicPlaceTypes => {
+                                                    { jobFunction.map(JobFunctions => {
                                                         return (
-                                                            <tr key={publicPlaceTypes.id}>
+                                                            <tr key={JobFunctions.id}>
                                                                 <TableCheckbox>
                                                                     <span>
                                                                     <DeleteIcon  onClick={handleClickOpen}>
@@ -118,24 +118,24 @@ const PublicPlaceTypes: React.FC = () => {
                                                                         aria-describedby="alert-dialog-description"
                                                                     >
                                                                         <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir esse país?"}
+                                                                        {"Tem certeza que quer excluir essa função?"}
                                                                         </DialogTitle>
                                                                         <DialogContent>
                                                                         <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir o país selecionado
+                                                                            Clique em Sim se você deseja excluir a função selecionado
                                                                         </DialogContentText>
                                                                         </DialogContent>
                                                                         <DialogActions>
                                                                         <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeletePublicPlaceType(publicPlaceTypes.id)}} autoFocus>
+                                                                        <Button onClick={()=>{handleDeleteJobFunction(JobFunctions.id)}} autoFocus>
                                                                             Sim
                                                                         </Button>
                                                                         </DialogActions>
                                                                     </Dialog>
                                                                     </span>
                                                                 </TableCheckbox>
-                                                                <th>{publicPlaceTypes.id}</th>
-                                                                <th>{publicPlaceTypes.name}</th>
+                                                                <th>{JobFunctions.id}</th>
+                                                                <th>{JobFunctions.name}</th>
                                                                 
                                                             </tr>                                                            
                                                             
@@ -173,4 +173,4 @@ const PublicPlaceTypes: React.FC = () => {
     )
 }
 
-export default PublicPlaceTypes;
+export default JobFunctions;

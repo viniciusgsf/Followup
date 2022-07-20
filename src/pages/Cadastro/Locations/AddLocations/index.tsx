@@ -18,6 +18,7 @@ interface StateFormData {
   name: string;  
   id: string;
   country_id: string;
+  state_id: string;
 }
 
 interface IStates {
@@ -93,6 +94,7 @@ const getStates = async (country: string) => {
     const handleSubmit = useCallback( async (data: StateFormData) => {
             
       data.country_id = country;
+      data.state_id = state;
 
       try {
           formRef.current?.setErrors({});
@@ -114,7 +116,7 @@ const getStates = async (country: string) => {
               return;
             }
           }
-    }, [country, history]);
+    }, [country, history, state]);
     
     
     return (
@@ -126,7 +128,7 @@ const getStates = async (country: string) => {
                 <TopContent>
                   <Topside>
                     <h4>Cidades</h4>
-                    <Link to="/states">
+                    <Link to="/locations">
                       <h2>Voltar</h2>
                     </Link>
                   </Topside>
@@ -134,7 +136,7 @@ const getStates = async (country: string) => {
                     <BottomContainer>
                       <Form ref={formRef} onSubmit={handleSubmit}>                           
 
-                        <Input name="name" value={state} onChange={handleStateChange} placeholder="Nome da cidade" />  
+                        <Input name="name"  placeholder="Nome da cidade" />  
 
                         <Box sx={{ minWidth: 120 }}>
                           <FormControl fullWidth>
@@ -168,7 +170,7 @@ const getStates = async (country: string) => {
                               labelId="demo-simple-select-label"
                               id="demo-simple-select"
                               label="País"
-                              onChange={handleChange}
+                              onChange={handleStateChange}
                             >
 
                               {states.map((state) => {

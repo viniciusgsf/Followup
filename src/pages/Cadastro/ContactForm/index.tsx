@@ -11,24 +11,24 @@ import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
 
 import DeleteIcon from '@mui/icons-material/Delete';
-interface IPublicPlaceType {
+interface IContactForm {
     id: string;
     name: string;
 }
  
 
-const PublicPlaceTypes: React.FC = () => {
+const ContactForm: React.FC = () => {
 
-    const [publicPlaceType, setPublicPlaceType] = useState<IPublicPlaceType[]>([])
+    const [contactForm, setContactForm] = useState<IContactForm[]>([])
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const history = useHistory();
     
     useEffect(() => {
         async function fetchMyAPI() {        
-        let response = await api.get<IPublicPlaceType[]>("publicPlaceTypes")        
+        let response = await api.get<IContactForm[]>("contactforms")        
 
-        setPublicPlaceType(response.data)
+        setContactForm(response.data)
         setLoading(false);  
     }
 
@@ -36,15 +36,15 @@ const PublicPlaceTypes: React.FC = () => {
     }, [])
 
     const handleCreate = () => {
-        history.push('/publicPlaceTypes/add')
+        history.push('/contactForm/add')
     }
 
     
-    const handleDeletePublicPlaceType= async (publicPlaceTypes:string) => {
+    const handleDeleteContactForm= async (situation:string) => {
        
-        await api.delete(`/publicPlaceTypes/${publicPlaceTypes}`)
-        let response = await api.get<IPublicPlaceType[]>("publicPlaceTypes")
-        setPublicPlaceType(response.data)
+        await api.delete(`/contactforms/${situation}`)
+        let response = await api.get<IContactForm[]>("contactforms")
+        setContactForm(response.data)
         setLoading(false);
         setOpen(false);
          
@@ -67,14 +67,14 @@ const PublicPlaceTypes: React.FC = () => {
                     <MainContent>
                         <TopContent>
                             <Topside>
-                                <h4>Tipos de Logradouro</h4>
+                                <h4>Formas de contato</h4>
                             </Topside>
                             <BottomSide>
                                 <BottomContainer>
                                     <BottomInputs>
                                         <label>
                                             <ButtonDiv>
-                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Código"/>
+                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Buscar..."/>
                                             </ButtonDiv>    
                                         
                                         </label>
@@ -97,16 +97,16 @@ const PublicPlaceTypes: React.FC = () => {
                                                             </span>
                                                         </TableCheckbox>
                                                         <th>Código</th>
-                                                        <th>Nome do País</th>
+                                                        <th>Forma de contato</th>
                                                     </tr>
                                                 </thead>
                                                 <TableBody>
                                                     <tr>
                                                        
                                                     </tr>
-                                                    { publicPlaceType.map(publicPlaceTypes => {
+                                                    { contactForm.map(contactForms => {
                                                         return (
-                                                            <tr key={publicPlaceTypes.id}>
+                                                            <tr key={contactForms.id}>
                                                                 <TableCheckbox>
                                                                     <span>
                                                                     <DeleteIcon  onClick={handleClickOpen}>
@@ -118,24 +118,24 @@ const PublicPlaceTypes: React.FC = () => {
                                                                         aria-describedby="alert-dialog-description"
                                                                     >
                                                                         <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir esse país?"}
+                                                                        {"Tem certeza que quer excluir essa forma de contato?"}
                                                                         </DialogTitle>
                                                                         <DialogContent>
                                                                         <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir o país selecionado
+                                                                            Clique em Sim se você deseja excluir a forma de contato selecionada
                                                                         </DialogContentText>
                                                                         </DialogContent>
                                                                         <DialogActions>
                                                                         <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeletePublicPlaceType(publicPlaceTypes.id)}} autoFocus>
+                                                                        <Button onClick={()=>{handleDeleteContactForm(contactForms.id)}} autoFocus>
                                                                             Sim
                                                                         </Button>
                                                                         </DialogActions>
                                                                     </Dialog>
                                                                     </span>
                                                                 </TableCheckbox>
-                                                                <th>{publicPlaceTypes.id}</th>
-                                                                <th>{publicPlaceTypes.name}</th>
+                                                                <th>{contactForms.id}</th>
+                                                                <th>{contactForms.name}</th>
                                                                 
                                                             </tr>                                                            
                                                             
@@ -173,4 +173,4 @@ const PublicPlaceTypes: React.FC = () => {
     )
 }
 
-export default PublicPlaceTypes;
+export default ContactForm;

@@ -20,8 +20,6 @@ interface StateFormData {
   country_id: string;
   state_id: string;
   location_id: string;
-  district_id: string;
-  publicPlaceType_id: string;
 }
 
 interface IStates {
@@ -35,9 +33,7 @@ interface Country {
 }
 
 const AddDistricts: React.FC = () => {
-  
   const history = useHistory();
-
   const [isSaved, setIsSaved] = useState(false);
 
   const [paises, setPaises] = useState<Country[]>([]);
@@ -49,32 +45,21 @@ const AddDistricts: React.FC = () => {
   const [locations, setLocations] = useState<IStates[]>([]);
   const [locationsList, setLocationsList] = React.useState('');
 
-  const [districts, setDistricts] = useState<IStates[]>([]);
-  const [district, setDistrict] = React.useState('');
 
-  const [PPTypes, setPPTypes] = useState<IStates[]>([]);
-  const [PPType, setPPType] = React.useState('');
 
 
   useEffect(() => {
     SetCountriesList();
   }, []);
 
-  useEffect(() => {
-    SetPPTypeList();
-  }, []);
       
   useEffect(() => { 
     getStates(country);
-  }, [country])
+ }, [country])
 
-  useEffect(() => { 
-    getLocations(state);
-  }, [state])
-
-  useEffect(() => { 
-    getDistricts(locationsList);
-  }, [locationsList])
+ useEffect(() => { 
+  getLocations(state);
+}, [state])
 
   const handleChange = (event: SelectChangeEvent) => {
     setCountry(event.target.value as string);
@@ -87,14 +72,6 @@ const AddDistricts: React.FC = () => {
 
   const handleLocationChange = (event: SelectChangeEvent) => {        
     setLocationsList(event.target.value as string);
-  }; 
-
-const handleDistrictChange = (event: SelectChangeEvent) => {        
-  setDistrict(event.target.value as string);
-}; 
-
-const handlePPTypeChange = (event: SelectChangeEvent) => {        
-  setPPType(event.target.value as string);
 }; 
   
   const SetCountriesList = async () => {
@@ -122,22 +99,6 @@ const getLocations = async (state: string) => {
   }
 }
 
-const getDistricts = async (location: string) => {
-  if(location){
-  const resp = await api.get(`/districts/${location}`);
-  const respData = resp.data;
-  setDistricts(respData);
-  }
-}
-
-const SetPPTypeList = async () => {
-    
-  const resp = await api.get(`/publicPlaceTypes`);
-  const respData = resp.data;
-  setPPTypes(respData);
-  setPPType(respData[0].id);
-  
-}
 
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -155,8 +116,6 @@ const SetPPTypeList = async () => {
       data.country_id = country;
       data.state_id = state;
       data.location_id = locationsList;
-      data.district_id = district;
-      data.publicPlaceType_id = PPType;
 
       try {
           formRef.current?.setErrors({});
@@ -168,9 +127,9 @@ const SetPPTypeList = async () => {
               abortEarly: false,       
             });
     
-          await api.post('/publicplaces', data);
+          await api.post('/districts', data);
           setIsSaved(true)
-          history.push('/publicPlace')
+          history.push('/districts')
       } catch (err) {
             if (err instanceof Yup.ValidationError) {
               const errors = getValidationErrors(err);
@@ -178,7 +137,7 @@ const SetPPTypeList = async () => {
               return;
             }
           }
-    }, [PPType, country, district, history, locationsList, state]);
+    }, [country, history, locationsList, state]);
     
     
     return (
@@ -189,8 +148,8 @@ const SetPPTypeList = async () => {
               <MainContent>
                 <TopContent>
                   <Topside>
-                    <h4>Logradouro</h4>
-                    <Link to="/publicPlace">
+                    <h4>Bairros</h4>
+                    <Link to="/districts">
                       <h2>Voltar</h2>
                     </Link>
                   </Topside>
@@ -200,7 +159,7 @@ const SetPPTypeList = async () => {
 
                         <Input name="name"  placeholder="Nome do Bairro" />  
 
-                        <Box sx={{ minWidth: 120}} mt={1} mb={1} >
+                        <Box sx={{ minWidth: 120 }}>
                           <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">País</InputLabel>
                             {paises.length > 0 &&
@@ -223,7 +182,7 @@ const SetPPTypeList = async () => {
                             }
                           </FormControl>
                         </Box>    
-                        <Box sx={{ minWidth: 120 }} mb={1}>
+                        <Box sx={{ minWidth: 120 }}>
                           <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">Estado</InputLabel>
                             {states.length > 0 &&
@@ -246,7 +205,7 @@ const SetPPTypeList = async () => {
                           </FormControl>
                         </Box>      
 
-                        <Box sx={{ minWidth: 120 }} mb={1}>
+                        <Box sx={{ minWidth: 120 }}>
                           <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">Cidade</InputLabel>
                             {/* {locations.length > 0 && */}
@@ -267,53 +226,7 @@ const SetPPTypeList = async () => {
                             </Select>
                             {/* } */}
                           </FormControl>
-                        </Box>  
-
-                         <Box sx={{ minWidth: 120 }} mb={1}>
-                          <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Bairro</InputLabel>
-                            {/* {districts.length > 0 && */}
-                            <Select
-                              name="district_id"
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              label="Cidade"
-                              onChange={handleDistrictChange}
-                            >
-
-                              {districts.map((district) => {
-                                return (
-                                  <MenuItem key={district.id} value={district.id}>{district.name}</MenuItem>
-                                )
-                              } )}
-      
-                            </Select>
-                            {/* } */}
-                          </FormControl>
-                        </Box>    
-
-                        <Box sx={{ minWidth: 120 }} mb={1}>
-                          <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Tipo de Logradouro</InputLabel>
-                            {PPTypes.length > 0 &&
-                            <Select
-                              name="publicPlaceType_id"
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              label="Cidade"
-                              onChange={handlePPTypeChange}
-                            >
-
-                              {PPTypes.map((publicPlaceType) => {
-                                return (
-                                  <MenuItem key={publicPlaceType.id} value={publicPlaceType.id}>{publicPlaceType.name}</MenuItem>
-                                )
-                              } )}
-      
-                            </Select>
-                            }
-                          </FormControl>
-                        </Box>              
+                        </Box>                
 
                         <CompButton type="submit">Cadastrar</CompButton>                        
 

@@ -58,7 +58,6 @@ export const BottomSide = styled.div`
     @media (max-width: 600px) {
             flex-direction: column;
         }
-        
 `;
 
 export const BottomContainer = styled.div`
@@ -80,10 +79,21 @@ export const BottomInputs = styled.div `
 
     label {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+
+        div {
+            height: 52px;
+            width: 100%;
+            margin-bottom: 10px;
+            
+        }
 
         @media (max-width: 600px) {
             flex-direction: column;
+
+            div {
+                margin-top: 6px;
+            }
         }
     }
 `;
@@ -198,7 +208,6 @@ export const TableBody = styled.tbody `
     }
 
     th {
-        
         max-width: 600px;
         font-weight: 400;
         font-size: 15px;

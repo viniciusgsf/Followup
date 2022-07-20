@@ -54,6 +54,38 @@ export default function NestedList() {
 
                       <List sx={{ width: '100%', height: '100%', bgcolor: '#1565c0', color: '#FFf' }} component="div" disablePadding>
                           
+                        <Link to="countries">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Países" />
+                          </ListItemButton>
+                        </Link>
+                        <Link to="states">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Estados" />
+                          </ListItemButton>
+                        </Link>
+                        <Link to="locations">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Localidades" />
+                          </ListItemButton>
+                        </Link>
+                        <Link to="districts">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Bairros" />
+                          </ListItemButton>
+                        </Link>
+                        <Link to="publicPlace">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Logradouros" />
+                          </ListItemButton>
+                        </Link>
+
+                        <Link to="publicPlaceTypes">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Tipo de Logradouros" />
+                          </ListItemButton>
+                        </Link>
+
                         <Link to="businessPlan">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Plano de Negócio" />
@@ -66,7 +98,7 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-                        <Link to="functions">
+                        <Link to="jobFunctions">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Funções" />
                           </ListItemButton>
@@ -90,21 +122,10 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-                        <Link to="publicPlace">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Logradouros" />
-                          </ListItemButton>
-                        </Link>
 
-                        <Link to="PublicPlaceTypes">
+                        <Link to="contactForm">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Tipo de Logradouros" />
-                          </ListItemButton>
-                        </Link>
-
-                        <Link to="ramos">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Ramos" />
+                              <ListItemText primary="Forma de contato" />
                           </ListItemButton>
                         </Link>
 
@@ -132,22 +153,6 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-                        <Link to="bairros">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Bairros" />
-                          </ListItemButton>
-                        </Link>
-
-                        <Link to="locations">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Localidades" />
-                          </ListItemButton>
-                        </Link>
-                        <Link to="states">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Estados" />
-                          </ListItemButton>
-                        </Link>
 
                         <Link to="nationalities">
                           <ListItemButton sx={{ pl: 4 }}>
@@ -155,11 +160,6 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-                        <Link to="countries">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Países" />
-                          </ListItemButton>
-                        </Link>
                       </List>
 
                   </Collapse>

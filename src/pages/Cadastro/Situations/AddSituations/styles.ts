@@ -86,12 +86,9 @@ export const BottomContainer = styled.div`
 
     form {
         max-width: 520px;
-        margin: auto; 
-
+        margin: auto;
         
     }
-
-    
 
 `;
 

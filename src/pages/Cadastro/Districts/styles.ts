@@ -79,18 +79,21 @@ export const BottomInputs = styled.div `
 
     label {
         display: flex;
-        flex-direction: row;
-        align-items: center;
+        flex-direction: column;
 
-        button {
-            height: 47px;
-            margin-top: 7px;
-
-    
+        div {
+            height: 52px;
+            width: 100%;
+            margin-bottom: 10px;
+            
         }
 
         @media (max-width: 600px) {
             flex-direction: column;
+
+            div {
+                margin-top: 6px;
+            }
         }
     }
 `;
@@ -251,24 +254,5 @@ export const InteractiveButtonsDiv = styled.div`
         height: 15px;
         width: 15px;
         margin-right: 5px;
-    }
-`;
-
-
-export const HiddenContent = styled.div`
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    background-color: rgba(255, 255, 255, 0.9);
-    transition: all ease .5s;
-    overflow-y: auto;
-    display: none;
-    /* display: flex; */
-    flex-direction: column;
-
-    @media (min-width: 1200px) {
-        padding-left: 280px;
     }
 `;
