@@ -1,50 +1,76 @@
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { FiCheck, FiCircle, FiSearch } from "react-icons/fi";
-import SearchInput from "../../../assets/components/SearchInput";
+import { FiCheck, FiCircle } from "react-icons/fi";
 import SideBar from '../../../assets/components/AuthSidebar';
 import TopBar from "../../../assets/components/topBar";
-import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer , BottomInputs, ButtonDiv, BottomContent, ContentContainer, ContentInfo,
+import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer , BottomInputs, BottomContent, ContentContainer, ContentInfo,
     TableScrollbar, TableItens, TableCheckbox, TableBody, InteractiveButtons, InteractiveButtonsContent, InteractiveButtonsDiv
 } from './styles';
 import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
 
 import DeleteIcon from '@mui/icons-material/Delete';
-interface Country {
+interface IBranch {
     id: string;
     name: string;
 }
  
 
-const PhoneTypes: React.FC = () => {
+const Branch: React.FC = () => {
 
-    const [phoneTypes, setPhoneTypes] = useState<Country[]>([])
+    const [branch, setBranch] = useState<IBranch[]>([]);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
+
+    const [segments, setSegments] = useState<IBranch[]>([]);
+    const [segment, setSegment] = React.useState('');
+
     const history = useHistory();
     
     useEffect(() => {
         async function fetchMyAPI() {        
-        let response = await api.get<Country[]>("FoneTypes")        
-
-        setPhoneTypes(response.data)
-        setLoading(false);  
-    }
-
-    fetchMyAPI()
+            getSegment();
+            if(segment){               
+                setLoading(false);  
+            }            
+        }
+        fetchMyAPI()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    useEffect(() => { 
+        getBranches(segment);
+     }, [segment])
+
+
     const handleCreate = () => {
-        history.push('/phoneTypes/add')
+        history.push('/branch/add')
+    }
+
+    const getSegment = async () => {
+    
+        const resp = await api.get(`/Segment`);
+        const respData = resp.data;
+        setSegments(respData);
+        setSegment(respData[0].id);
+        
+      }
+
+    const getBranches = async (segment: string) => {
+        if(segment){
+        const resp = await api.get(`/branch/${segment}`);
+        const respData = resp.data;
+        setBranch(respData);
+        setLoading(false);
+        }
     }
 
     
-    const handleDeletePhoneType = async (phoneType:string) => {
+    const handleDeleteBranch= async (situation:string) => {
        
-        await api.delete(`/FoneTypes/${phoneType}`)
-        let response = await api.get<Country[]>("FoneTypes")
-        setPhoneTypes(response.data)
+        await api.delete(`/branch/${situation}`)
+        let response = await api.get<IBranch[]>("branch")
+        setBranch(response.data)
         setLoading(false);
         setOpen(false);
          
@@ -58,6 +84,10 @@ const PhoneTypes: React.FC = () => {
         setOpen(false);
       };
 
+    const handleSegmentChange = (event: SelectChangeEvent) => {        
+        setSegment(event.target.value as string);
+    };
+
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     return (
         <>
@@ -67,18 +97,36 @@ const PhoneTypes: React.FC = () => {
                     <MainContent>
                         <TopContent>
                             <Topside>
-                                <h4>Tipo de telefone</h4>
+                                <h4>Ramos</h4>
                             </Topside>
                             <BottomSide>
                                 <BottomContainer>
                                     <BottomInputs>
                                         <label>
-                                            <ButtonDiv>
-                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Código"/>
-                                            </ButtonDiv>    
-                                            <ButtonDiv>
-                                            <SearchInput name="description" icon={FiSearch} type="text" placeholder="Nome do País"/>
-                                            </ButtonDiv>
+                                            <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel id="demo-simple-select-label">Segmento</InputLabel>
+                                                    {segments.length > 0 &&
+                                                    <Select
+                                                    name="country_id"
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    defaultValue={segments[0].id}
+                                                    label="País"
+                                                    onChange={handleSegmentChange}
+                                                    >
+
+                                                    {segments.map((segment) => {
+                                                        return (
+                                                        <MenuItem key={segment.id} value={segment.id}>{segment.name}</MenuItem>
+                                                        )
+                                                    } )}
+
+                                                    </Select>
+                                                    }
+                                                </FormControl>
+                                            </Box>   
+                                        
                                         </label>
                                     </BottomInputs>
                                 </BottomContainer>
@@ -99,16 +147,16 @@ const PhoneTypes: React.FC = () => {
                                                             </span>
                                                         </TableCheckbox>
                                                         <th>Código</th>
-                                                        <th>Nome do País</th>
+                                                        <th>Estado dos Ramos</th>
                                                     </tr>
                                                 </thead>
                                                 <TableBody>
                                                     <tr>
                                                        
                                                     </tr>
-                                                    { phoneTypes.map(phoneType => {
+                                                    { branch.map(branches => {
                                                         return (
-                                                            <tr key={phoneType.id}>
+                                                            <tr key={branches.id}>
                                                                 <TableCheckbox>
                                                                     <span>
                                                                     <DeleteIcon  onClick={handleClickOpen}>
@@ -120,24 +168,24 @@ const PhoneTypes: React.FC = () => {
                                                                         aria-describedby="alert-dialog-description"
                                                                     >
                                                                         <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir esse país?"}
+                                                                        {"Tem certeza que quer excluir esse ramo?"}
                                                                         </DialogTitle>
                                                                         <DialogContent>
                                                                         <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir o país selecionado
+                                                                            Clique em Sim se você deseja excluir o ramo selecionado
                                                                         </DialogContentText>
                                                                         </DialogContent>
                                                                         <DialogActions>
                                                                         <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeletePhoneType(phoneType.id)}} autoFocus>
+                                                                        <Button onClick={()=>{handleDeleteBranch(branches.id)}} autoFocus>
                                                                             Sim
                                                                         </Button>
                                                                         </DialogActions>
                                                                     </Dialog>
                                                                     </span>
                                                                 </TableCheckbox>
-                                                                <th>{phoneType.id}</th>
-                                                                <th>{phoneType.name}</th>
+                                                                <th>{branches.id}</th>
+                                                                <th>{branches.name}</th>
                                                                 
                                                             </tr>                                                            
                                                             
@@ -175,4 +223,4 @@ const PhoneTypes: React.FC = () => {
     )
 }
 
-export default PhoneTypes;
+export default Branch;

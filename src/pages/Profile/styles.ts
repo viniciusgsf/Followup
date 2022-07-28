@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { shade } from "polished";
 
 export const Container = styled.div`
     display: flex;
@@ -137,10 +137,10 @@ export const ProfileCardContent = styled.div `
             }
         }
 
-    h5 {
+    h2 {
         margin: 0px 0px 0.35em;
         font-weight: 600;
-        font-size: 1.5rem;
+        font-size: 18px;
         line-height: 1.375;
         color: rgb(18, 24, 40);
     }
@@ -155,16 +155,45 @@ export const ProfileCardContent = styled.div `
 `;
 
 export const UploadAvatarButton = styled.div`
+    margin-bottom: 32px;
     display: flex;
     align-items: center;
-    padding: 8px;
+    width: 100%;
+   
 
-    button {
-        color: #1565c0;
-        background-color: #fff;
+
+    img {
+        width: 186px;
+        height: 186px;
+        border-radius: 50%;
+    }
+
+    label {
+        justify-content: center;
+        align-items: center;    
+        display: flex;
+        width: 48px;
+        height: 48px;
+        background: #4039b7;
+        cursor: pointer;
+        border-radius: 50%;
+        margin: auto;
+        transition: background-color 0.2s;
+
+        input {
+            display: none;
+            
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+            color: #fff;
+            
+        }
 
         &:hover {
-            background-color: rgba(80, 72, 229, 0.04);
+            background: ${shade(0.2, '#4039b7')};
         }
     }
 `;

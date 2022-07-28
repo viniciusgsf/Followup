@@ -86,15 +86,15 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-                        <Link to="businessPlan">
+                        <Link to="nationalities">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Plano de Negócio" />
+                              <ListItemText primary="Nacionalidade" />
                           </ListItemButton>
                         </Link>
 
-                        <Link to="treatmentForm">
+                        <Link to="profession">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Forma de Tratamento" />
+                              <ListItemText primary="Profissão" />
                           </ListItemButton>
                         </Link>
 
@@ -104,15 +104,21 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>  
 
-                        <Link to="profession">
+                        <Link to="treatmentForm">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Profissão" />
+                              <ListItemText primary="Forma de Tratamento" />
                           </ListItemButton>
                         </Link>
 
-                        <Link to="estagios">
+                        <Link to="branch">
                           <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Estágios" />
+                              <ListItemText primary="Ramos" />
+                          </ListItemButton>
+                        </Link>
+
+                        <Link to="reason">
+                          <ListItemButton sx={{ pl: 4 }}>
+                              <ListItemText primary="Razão" />
                           </ListItemButton>
                         </Link>
 
@@ -129,18 +135,6 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-                        <Link to="fonts">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Fontes" />
-                          </ListItemButton>
-                        </Link>
-
-                        <Link to="subFonts">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Sub-fontes" />
-                          </ListItemButton>
-                        </Link>
-
                         <Link to="segments">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Segmentos" />
@@ -154,11 +148,6 @@ export default function NestedList() {
                         </Link>
 
 
-                        <Link to="nationalities">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Nacionalidade" />
-                          </ListItemButton>
-                        </Link>
 
                       </List>
 

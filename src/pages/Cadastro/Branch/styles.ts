@@ -79,10 +79,21 @@ export const BottomInputs = styled.div `
 
     label {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+
+        div {
+            height: 52px;
+            width: 100%;
+            margin-bottom: 10px;
+            
+        }
 
         @media (max-width: 600px) {
             flex-direction: column;
+
+            div {
+                margin-top: 6px;
+            }
         }
     }
 `;

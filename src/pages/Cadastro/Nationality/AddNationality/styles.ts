@@ -96,7 +96,6 @@ export const BottomContainer = styled.div`
         border-radius: 7px;
         margin-top: 5px;
 
-        
     }
 
 `;

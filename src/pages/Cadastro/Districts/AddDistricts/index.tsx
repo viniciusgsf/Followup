@@ -110,7 +110,7 @@ const getLocations = async (state: string) => {
     
   };
 
-  const formRef = useRef<FormHandles>(null);
+    const formRef = useRef<FormHandles>(null);
     const handleSubmit = useCallback( async (data: StateFormData) => {
             
       data.country_id = country;

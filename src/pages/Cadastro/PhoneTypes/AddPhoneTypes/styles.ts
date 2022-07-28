@@ -83,19 +83,17 @@ export const BottomContainer = styled.div`
     padding-top: 12px ;
     padding-bottom: 12px ;
     
+    p {
+        margin-top: 10px;
+
+        .checkbox {
+            margin-left: 15px;
+        }
+    }
 
     form {
         max-width: 520px;
         margin: auto;
-        
-    }
-
-    div {
-        width: 100%;
-        height: 52px;
-        border-radius: 7px;
-        margin-top: 5px;
-
         
     }
 

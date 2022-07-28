@@ -90,12 +90,17 @@ export const BottomContainer = styled.div`
         
     }
 
+    input {
+        svg {
+            margin: 0;
+        }
+    }
+
     div {
         width: 100%;
         height: 52px;
         border-radius: 7px;
         margin-top: 5px;
-
         
     }
 

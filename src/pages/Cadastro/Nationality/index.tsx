@@ -9,26 +9,27 @@ import {Container, SubContainer, Content, MainContent, TopContent, Topside, Bott
 } from './styles';
 import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
-
 import DeleteIcon from '@mui/icons-material/Delete';
-interface Country {
+
+
+interface INationality {
     id: string;
     name: string;
 }
  
 
-const PhoneTypes: React.FC = () => {
+const Nationality: React.FC = () => {
 
-    const [phoneTypes, setPhoneTypes] = useState<Country[]>([])
+    const [nationality, setNationality] = useState<INationality[]>([])
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const history = useHistory();
     
     useEffect(() => {
         async function fetchMyAPI() {        
-        let response = await api.get<Country[]>("FoneTypes")        
+        let response = await api.get<INationality[]>("Nationality")        
 
-        setPhoneTypes(response.data)
+        setNationality(response.data)
         setLoading(false);  
     }
 
@@ -36,15 +37,15 @@ const PhoneTypes: React.FC = () => {
     }, [])
 
     const handleCreate = () => {
-        history.push('/phoneTypes/add')
+        history.push('/nationalities/add')
     }
 
     
-    const handleDeletePhoneType = async (phoneType:string) => {
+    const handleDeleteNationality= async (nationality:string) => {
        
-        await api.delete(`/FoneTypes/${phoneType}`)
-        let response = await api.get<Country[]>("FoneTypes")
-        setPhoneTypes(response.data)
+        await api.delete(`/Nationality/${nationality}`)
+        let response = await api.get<INationality[]>("Nationality")
+        setNationality(response.data)
         setLoading(false);
         setOpen(false);
          
@@ -67,18 +68,16 @@ const PhoneTypes: React.FC = () => {
                     <MainContent>
                         <TopContent>
                             <Topside>
-                                <h4>Tipo de telefone</h4>
+                                <h4>Nacionalidade</h4>
                             </Topside>
                             <BottomSide>
                                 <BottomContainer>
                                     <BottomInputs>
                                         <label>
                                             <ButtonDiv>
-                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Código"/>
+                                            <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Buscar..."/>
                                             </ButtonDiv>    
-                                            <ButtonDiv>
-                                            <SearchInput name="description" icon={FiSearch} type="text" placeholder="Nome do País"/>
-                                            </ButtonDiv>
+                                        
                                         </label>
                                     </BottomInputs>
                                 </BottomContainer>
@@ -99,16 +98,16 @@ const PhoneTypes: React.FC = () => {
                                                             </span>
                                                         </TableCheckbox>
                                                         <th>Código</th>
-                                                        <th>Nome do País</th>
+                                                        <th>Nacionalidade</th>
                                                     </tr>
                                                 </thead>
                                                 <TableBody>
                                                     <tr>
                                                        
                                                     </tr>
-                                                    { phoneTypes.map(phoneType => {
+                                                    { nationality.map(nationalities => {
                                                         return (
-                                                            <tr key={phoneType.id}>
+                                                            <tr key={nationalities.id}>
                                                                 <TableCheckbox>
                                                                     <span>
                                                                     <DeleteIcon  onClick={handleClickOpen}>
@@ -120,24 +119,24 @@ const PhoneTypes: React.FC = () => {
                                                                         aria-describedby="alert-dialog-description"
                                                                     >
                                                                         <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir esse país?"}
+                                                                        {"Tem certeza que quer excluir essa Nacionalidade?"}
                                                                         </DialogTitle>
                                                                         <DialogContent>
                                                                         <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir o país selecionado
+                                                                            Clique em Sim se você deseja excluir a Nacionalidade selecionada
                                                                         </DialogContentText>
                                                                         </DialogContent>
                                                                         <DialogActions>
                                                                         <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeletePhoneType(phoneType.id)}} autoFocus>
+                                                                        <Button onClick={()=>{handleDeleteNationality(nationalities.id)}} autoFocus>
                                                                             Sim
                                                                         </Button>
                                                                         </DialogActions>
                                                                     </Dialog>
                                                                     </span>
                                                                 </TableCheckbox>
-                                                                <th>{phoneType.id}</th>
-                                                                <th>{phoneType.name}</th>
+                                                                <th>{nationalities.id}</th>
+                                                                <th>{nationalities.name}</th>
                                                                 
                                                             </tr>                                                            
                                                             
@@ -175,4 +174,4 @@ const PhoneTypes: React.FC = () => {
     )
 }
 
-export default PhoneTypes;
+export default Nationality;
