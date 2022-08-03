@@ -11,7 +11,6 @@ import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Form } from "@unform/web";
 interface Country {
     id: string;
     name: string;
@@ -23,7 +22,6 @@ const Countries: React.FC = () => {
     const [paises, setPaises] = useState<Country[]>([])
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
-    const [openUpdate, setOpenUpdate] = useState(false);
     const history = useHistory();
     
     useEffect(() => {
@@ -52,30 +50,12 @@ const Countries: React.FC = () => {
          
     }
 
-    const handleUpdateCountry = async (pais:string) => {
-       
-        await api.delete(`/countries/${pais}`)
-        let response = await api.get<Country[]>("countries")
-        setPaises(response.data)
-        setLoading(false);
-        setOpen(false);
-         
-    }
-
     const handleClickOpen = () => {
         setOpen(true);
       };
     
-    const handleClose = () => {
+      const handleClose = () => {
         setOpen(false);
-      };
-
-      const handleClickUpdateOpen = () => {
-        setOpenUpdate(true);
-      };
-    
-    const handleUpdateClose = () => {
-        setOpenUpdate(false);
       };
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -157,33 +137,7 @@ const Countries: React.FC = () => {
                                                                     </span>
                                                                 </TableCheckbox>
                                                                 <th>{pais.id}</th>
-
-
-                                                                <th onClick={handleClickUpdateOpen} >{pais.name} 
-                                                                    <Form onSubmit={handleUpdateCountry}>
-                                                                        <Dialog
-                                                                            open={openUpdate}
-                                                                            onClose={handleUpdateClose}
-                                                                            aria-labelledby="alert-dialog-title"
-                                                                            aria-describedby="alert-dialog-description"
-                                                                        >
-                                                                            <DialogTitle id="alert-dialog-title">
-                                                                            {"Editar Campo selecionado"}
-                                                                            </DialogTitle>
-                                                                            <DialogContent>
-                                                                            <ButtonDiv>
-                                                                                <SearchInput name="description" type="text" placeholder="Nome do País"/>
-                                                                            </ButtonDiv>
-                                                                            </DialogContent>
-                                                                            <DialogActions>
-                                                                            <Button onClick={handleUpdateClose}>Cancelar</Button>
-                                                                            <Button type="submit">
-                                                                                Confirmar
-                                                                            </Button>
-                                                                            </DialogActions>
-                                                                        </Dialog>
-                                                                    </Form>
-                                                                </th>
+                                                                <th>{pais.name}</th>
                                                                 
                                                             </tr>                                                            
                                                             

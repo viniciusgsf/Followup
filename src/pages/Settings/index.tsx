@@ -12,7 +12,6 @@ import {Container, SubContainer,  Content, MainContent, InfoContainer, ProfileCo
 import ProfileInput from "../../assets/components/ProfileInput";
 import CompButton from "../../assets/components/Button";
 import getValidationErrors from "../../utils/getValidationErrors";
-import { useAuth } from "../../hooks/AuthContext";
 
 interface ProfileFormData {
     old_password: string;
@@ -28,9 +27,17 @@ const Settings: React.FC = () => {
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
-            old_password: Yup.string().required('Senha atual obrigatória'),
-            password: Yup.string().min(6, 'No mínimo 6 dígitos'),
-            password_confirmation: Yup.string().min(6, 'No mínimo 6 dígitos').oneOf([Yup.ref('password'), null], 'Passwords must match'),
+            old_password: Yup.string(),
+            password: Yup.string().when('old_password', {
+              is: (val: { lenght: any; }) => !!val.lenght,
+              then: Yup.string().required('Campo obrigatorio'),
+              otherwise: Yup.string(),
+            }),
+            password_confirmation: Yup.string().when('password', {
+              is: (val: { lenght: any; }) => !!val.lenght,
+              then: Yup.string().required('Campo obrigatorio'),
+              otherwise: Yup.string(),
+            }).oneOf([Yup.ref('password'), null], 'Passwords must match'),
         });
         await schema.validate(data, {
             abortEarly: false,       

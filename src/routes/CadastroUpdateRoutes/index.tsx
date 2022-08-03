@@ -2,14 +2,14 @@ import React from "react";
 import { Switch } from "react-router-dom";
 import Route from "../AppRoutes/Routes";
 
-import Reason from "../../pages/Cadastro/Reason";
+import UpdateCountry from "../../pages/Cadastro/Countries/UpdateCountry";
 
 
 const CadastroUpdateRoutes: React.FC = ( ) => (
         <Switch>
 
+            <Route path='/countries/update:id' isPrivate component={UpdateCountry} />
             {/* <Route path='/districts/update' isPrivate component={AddDistricts} />
-            <Route path='/countries/update' isPrivate component={AddCountry} />
             <Route path="/jobFunctions/update"  isPrivate component={AddJobFunctions} />
             <Route path='/locations/update' isPrivate component={AddPublicPlace} />
             <Route path="/nationalities/update"  isPrivate component={AddNationality} />

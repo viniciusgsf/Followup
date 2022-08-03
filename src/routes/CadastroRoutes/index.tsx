@@ -11,7 +11,6 @@ import Locations from "../../pages/Cadastro/Locations";
 import PublicPlace from "../../pages/Cadastro/PublicPlace";
 import PhoneTypes from "../../pages/Cadastro/PhoneTypes";
 import Profession from "../../pages/Cadastro/Profession";
-import ContactForm from "../../pages/Cadastro/ContactForm";
 import Segments from "../../pages/Cadastro/Segments";
 import Situations from "../../pages/Cadastro/Situations";
 import States from "../../pages/Cadastro/States";
@@ -30,7 +29,6 @@ import AddJobFunctions from "../../pages/Cadastro/JobFunctions/AddJobFunctions";
 import AddSegments from "../../pages/Cadastro/Segments/AddSegments";
 import AddProfessions from "../../pages/Cadastro/Profession/AddProfessions";
 import AddSituations from "../../pages/Cadastro/Situations/AddSituations";
-import AddContactForm from "../../pages/Cadastro/ContactForm/AddContactForm";
 import AddBranch from "../../pages/Cadastro/Branch/AddBranch";
 import AddNationality from "../../pages/Cadastro/Nationality/AddNationality";
 import AddTreatmentForm from "../../pages/Cadastro/TreatmentForm/AddTreatmentForm";
@@ -64,8 +62,6 @@ const CadastroRoutes: React.FC = ( ) => (
             <Route path="/profession/add"  isPrivate component={AddProfessions} />
             <Route path="/profession"  isPrivate component={Profession} />
 
-            <Route path="/contactForm/add"  isPrivate component={AddContactForm} />
-            <Route path="/contactForm"  isPrivate component={ContactForm} />
 
             <Route path="/segments/add"  isPrivate component={AddSegments} />
             <Route path="/segments"  isPrivate component={Segments} />

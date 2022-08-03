@@ -91,12 +91,11 @@ const Profile: React.FC = () => {
 
           data.append('avatar', e.target.files[0])
 
-          api.patch('/users/avatar', data).then(response => {
-            updateUser(response.data);
-          })
+          api.patch('/users/avatar', data);
+          
           
         }
-      }, [updateUser]);
+      }, []);
       
     return (
     <>

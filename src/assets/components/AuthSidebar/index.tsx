@@ -128,13 +128,6 @@ export default function NestedList() {
                           </ListItemButton>
                         </Link>
 
-
-                        <Link to="contactForm">
-                          <ListItemButton sx={{ pl: 4 }}>
-                              <ListItemText primary="Forma de contato" />
-                          </ListItemButton>
-                        </Link>
-
                         <Link to="segments">
                           <ListItemButton sx={{ pl: 4 }}>
                               <ListItemText primary="Segmentos" />
@@ -164,7 +157,7 @@ export default function NestedList() {
                                 <ListItemText primary="Motivo de contato" />
                             </ListItemButton>
                         </Link>
-                        <Link to="/contactways">
+                        <Link to="/contactForm">
                             <ListItemButton href="#simple-list">
                                 <ListItemText primary="Meios de contato" />
                             </ListItemButton>
