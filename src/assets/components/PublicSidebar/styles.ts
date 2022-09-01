@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+
 export const PublicListStyle = styled.div`
     flex-direction: column;
     min-width: 240px;
@@ -8,10 +9,13 @@ export const PublicListStyle = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    overflow-y: scroll;
+    overflow: auto;
     background-color: #1565c0;
-    border-radius: 5px;
 
+    body::-webkit-scrollbar {
+    width: 1em;
+    }
+    
     a { 
         text-decoration: none;
         color: #FFF;

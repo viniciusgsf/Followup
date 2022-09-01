@@ -1,5 +1,6 @@
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Input } from "@mui/material";
+import * as Yup from 'yup'; 
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FiCheck, FiCircle, FiSearch } from "react-icons/fi";
 import SearchInput from "../../../assets/components/SearchInput";
 import SideBar from '../../../assets/components/AuthSidebar';
@@ -9,8 +10,14 @@ import {Container, SubContainer, Content, MainContent, TopContent, Topside, Bott
 } from './styles';
 import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
-
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { FormHandles } from "@unform/core";
+import { Form } from "@unform/web";
+import getValidationErrors from "../../../utils/getValidationErrors";
+import { Dialogbox } from "../Countries/styles";
+
+
 interface ISegment {
     id: string;
     name: string;
@@ -20,8 +27,14 @@ interface ISegment {
 const Segments: React.FC = () => {
 
     const [segment, setSegment] = useState<ISegment[]>([])
+    const [segments, setSegments] = React.useState<ISegment>();
+
     const [loading, setLoading] = useState(true);
+
     const [open, setOpen] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+
+    const formRef = useRef<FormHandles>(null);
     const history = useHistory();
     
     useEffect(() => {
@@ -50,12 +63,46 @@ const Segments: React.FC = () => {
          
     }
 
-    const handleClickOpen = () => {
+    const handleSubmit = useCallback( async (data: ISegment) => {
+        
+        try {
+            
+            formRef.current?.setErrors({});
+            const schema = Yup.object().shape({
+                name: Yup.string().required('Nome obrigatório'),              
+            });
+            await schema.validate(data, {
+                abortEarly: false,       
+              });
+      
+            await api.patch('/Situation', data);
+            setOpenUpdate(false);
+            
+        } catch (err) {
+              if (err instanceof Yup.ValidationError) {
+                const errors = getValidationErrors(err);
+                formRef.current?.setErrors(errors);
+                return;
+              }
+            }
+      }, []);
+
+    const handleClickOpen = (situations:ISegment) => {
+        setSegments(situations)
         setOpen(true);
       };
     
-      const handleClose = () => {
+    const handleClose = () => {
         setOpen(false);
+      };
+
+    const handleClickUpdateOpen = (situations:ISegment) => {        
+        setSegments(situations)
+        setOpenUpdate(true);
+      };
+    
+    const handleUpdateClose = () => {
+        setOpenUpdate(false);
       };
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -109,29 +156,8 @@ const Segments: React.FC = () => {
                                                             <tr key={segments.id}>
                                                                 <TableCheckbox>
                                                                     <span>
-                                                                    <DeleteIcon  onClick={handleClickOpen}>
-                                                                    </DeleteIcon >
-                                                                    <Dialog
-                                                                        open={open}
-                                                                        onClose={handleClose}
-                                                                        aria-labelledby="alert-dialog-title"
-                                                                        aria-describedby="alert-dialog-description"
-                                                                    >
-                                                                        <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir essa função?"}
-                                                                        </DialogTitle>
-                                                                        <DialogContent>
-                                                                        <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir o segmento selecionado
-                                                                        </DialogContentText>
-                                                                        </DialogContent>
-                                                                        <DialogActions>
-                                                                        <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeleteSegments(segments.id)}} autoFocus>
-                                                                            Sim
-                                                                        </Button>
-                                                                        </DialogActions>
-                                                                    </Dialog>
+                                                                        <DeleteIcon onClick={() => {handleClickOpen(segments)}} />                                                                                                                                       
+                                                                        <EditIcon onClick={() => {handleClickUpdateOpen(segments)}}/>
                                                                     </span>
                                                                 </TableCheckbox>
                                                                 <th>{segments.id}</th>
@@ -169,6 +195,54 @@ const Segments: React.FC = () => {
         </Container>
         <SideBar />
         <TopBar/>
+        <Dialogbox>
+            <Dialog
+                open={openUpdate}
+                onClose={handleUpdateClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Edição de dados"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Edite os dados relacionado a {segments?.name}
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions >
+                    <span>                                        
+                    <Form ref={formRef} onSubmit={handleSubmit}>   
+                        <Input name="name"  defaultValue={segments?.name} placeholder="Digite o país..." />  
+                    </Form>
+                    </span> 
+                </DialogActions>
+            </Dialog>
+        
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Tem certeza que quer excluir esse país?"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Clique em Sim se você deseja excluir {segments?.name}
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Form ref={formRef} onSubmit={handleDeleteSegments}>   
+                        <Button onClick={handleClose}>Cancelar</Button>
+                        <Button type="submit" autoFocus>
+                            Sim
+                        </Button>
+                    </Form>
+                </DialogActions>
+            </Dialog>
+        </Dialogbox>
         </>
     )
 }

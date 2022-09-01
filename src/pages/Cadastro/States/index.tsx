@@ -1,17 +1,22 @@
-import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Input, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FiCheck, FiCircle, } from "react-icons/fi";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { FormHandles } from "@unform/core";
+import * as Yup from 'yup'; 
 
 import SideBar from '../../../assets/components/AuthSidebar';
 import TopBar from "../../../assets/components/topBar";
 
 import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer , BottomInputs, BottomContent, ContentContainer, ContentInfo,
-    TableScrollbar, TableItens, TableCheckbox, TableBody, InteractiveButtons, InteractiveButtonsContent, InteractiveButtonsDiv
+    TableScrollbar, TableItens, TableCheckbox, TableBody, InteractiveButtons, InteractiveButtonsContent, InteractiveButtonsDiv, Dialogbox
 } from './styles';
 import { useHistory } from "react-router-dom";
 import api from "../../../services/apiClient";
+import getValidationErrors from "../../../utils/getValidationErrors";
+import { Form } from "@unform/web";
 
 interface IStates {
     id: string;
@@ -26,11 +31,14 @@ interface Country {
 const States: React.FC = () => {
 
     const [states, setStates] = useState<IStates[]>([])
+    const [state, setState] = useState<Country>();
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
     const [country, setCountry] = React.useState('');
     const [paises, setPaises] = useState<Country[]>([]);
     const history = useHistory();
+    const formRef = useRef<FormHandles>(null);
     
     useEffect(() => {
         async function fetchMyAPI() {        
@@ -85,13 +93,47 @@ const States: React.FC = () => {
          
     }
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (state:Country) => {
+        setState(state)
         setOpen(true);
       };
     
-      const handleClose = () => {
+    const handleClose = () => {
         setOpen(false);
       };
+
+      const handleClickUpdateOpen = (state:Country) => {        
+        setState(state)
+        setOpenUpdate(true);
+      };
+    
+    const handleUpdateClose = () => {
+        setOpenUpdate(false);
+      };
+
+      const handleSubmit = useCallback( async (data: IStates) => {
+        
+        try {
+            
+            formRef.current?.setErrors({});
+            const schema = Yup.object().shape({
+                name: Yup.string().required('Nome obrigatório'),              
+            });
+            await schema.validate(data, {
+                abortEarly: false,       
+              });
+      
+            await api.patch('/states', data);
+            setOpenUpdate(false);
+            
+        } catch (err) {
+              if (err instanceof Yup.ValidationError) {
+                const errors = getValidationErrors(err);
+                formRef.current?.setErrors(errors);
+                return;
+              }
+            }
+      }, []);
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     return (
@@ -158,42 +200,20 @@ const States: React.FC = () => {
                                                 </thead>
                                                 <TableBody>
                                                         
-                                                        { states.map(state => {
+                                                    { states.map(state => {
                                                         return (
                                                             <tr key={state.id}>
                                                                 <TableCheckbox>
                                                                     <span>
-                                                                    <DeleteIcon  onClick={handleClickOpen}>
-                                                                    </DeleteIcon >
-                                                                    <Dialog
-                                                                        open={open}
-                                                                        onClose={handleClose}
-                                                                        aria-labelledby="alert-dialog-title"
-                                                                        aria-describedby="alert-dialog-description"
-                                                                    >
-                                                                        <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir esse país?"}
-                                                                        </DialogTitle>
-                                                                        <DialogContent>
-                                                                        <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir o país selecionado
-                                                                        </DialogContentText>
-                                                                        </DialogContent>
-                                                                        <DialogActions>
-                                                                        <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeleteState(state.id)}} autoFocus>
-                                                                            Sim
-                                                                        </Button>
-                                                                        </DialogActions>
-                                                                    </Dialog>
+                                                                    <DeleteIcon onClick={() => {handleClickOpen(state)}} />                                                                                                                                       
+                                                                    <EditIcon onClick={() => {handleClickUpdateOpen(state)}}/>
                                                                     </span>
                                                                 </TableCheckbox>
-                                                                
-                                                                <th>{state.name}</th>
-                                                                
-                                                            </tr>                                                         
+                                                                <th>{state.id}</th>
+                                                                <th>{state.name}</th>                                                                
+                                                            </tr>                                                                                                                        
                                                         )
-                                                        }) }                                                          
+                                                        }) }                                                       
                                                 </TableBody>
                                             </table>
                                         </TableItens>
@@ -225,6 +245,54 @@ const States: React.FC = () => {
         </Container>
         <SideBar />
         <TopBar/>
+        <Dialogbox>
+        <Dialog
+            open={openUpdate}
+            onClose={handleUpdateClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+            {"Edição de dados"}
+            </DialogTitle>
+            <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+                Edite os dados relacionado a {state?.name}
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions >
+                <span>                                        
+                <Form ref={formRef} onSubmit={handleSubmit}>   
+                    <Input name="name"  defaultValue={state?.name} placeholder="Digite o país..." />  
+                </Form>
+                </span> 
+            </DialogActions>
+        </Dialog>
+       
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+            {"Tem certeza que quer excluir esse país?"}
+            </DialogTitle>
+            <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+                Clique em Sim se você deseja excluir {state?.name}
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Form ref={formRef} onSubmit={handleDeleteState}>   
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button type="submit" autoFocus>
+                        Sim
+                    </Button>
+                </Form>
+            </DialogActions>
+        </Dialog>
+        </Dialogbox>
         </>
     )
 }

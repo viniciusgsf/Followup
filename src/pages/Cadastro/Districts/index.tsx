@@ -1,8 +1,11 @@
-import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Input, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FiCheck, FiCircle } from "react-icons/fi";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import * as Yup from 'yup'; 
+import { FormHandles } from "@unform/core";
 
 import SideBar from '../../../assets/components/AuthSidebar';
 import TopBar from "../../../assets/components/topBar";
@@ -12,6 +15,9 @@ import {Container, SubContainer, Content, MainContent, TopContent, Topside, Bott
 } from './styles';
 import { useHistory } from "react-router-dom";
 import api from "../../../services/apiClient";
+import { Form } from "@unform/web";
+import getValidationErrors from "../../../utils/getValidationErrors";
+import { Dialogbox } from "../Countries/styles";
 
 interface IStates {
     id: string;
@@ -27,6 +33,7 @@ const Districts: React.FC = () => {
 
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
 
     const [state, setState] = React.useState('');
     const [states, setStates] = useState<IStates[]>([])
@@ -38,6 +45,8 @@ const Districts: React.FC = () => {
     const [locationsList, setLocationsList] = React.useState('');
 
     const [districs, setDistricts] = useState<IStates[]>([]);
+    const [district, setDistrict] = React.useState<Country>();
+    const formRef = useRef<FormHandles>(null);
 
     const history = useHistory();
     
@@ -129,14 +138,48 @@ const Districts: React.FC = () => {
         setOpen(false);
          
     }
+
+    const handleSubmit = useCallback( async (data: IStates) => {
+        
+        try {
+            
+            formRef.current?.setErrors({});
+            const schema = Yup.object().shape({
+                name: Yup.string().required('Nome obrigatório'),              
+            });
+            await schema.validate(data, {
+                abortEarly: false,       
+              });
+      
+            await api.patch('/districts', data);
+            setOpenUpdate(false);
+            
+        } catch (err) {
+              if (err instanceof Yup.ValidationError) {
+                const errors = getValidationErrors(err);
+                formRef.current?.setErrors(errors);
+                return;
+              }
+            }
+      }, []);
     
 
-    const handleClickOpen = () => {
+      const handleClickOpen = (district:Country) => {
+        setDistrict(district)
         setOpen(true);
       };
     
-      const handleClose = () => {
+    const handleClose = () => {
         setOpen(false);
+      };
+
+      const handleClickUpdateOpen = (district:Country) => {        
+        setDistrict(district)
+        setOpenUpdate(true);
+      };
+    
+    const handleUpdateClose = () => {
+        setOpenUpdate(false);
       };
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -259,29 +302,8 @@ const Districts: React.FC = () => {
                                                             <tr key={distric.id}>
                                                                 <TableCheckbox>
                                                                     <span>
-                                                                    <DeleteIcon  onClick={handleClickOpen}>
-                                                                    </DeleteIcon >
-                                                                    <Dialog
-                                                                        open={open}
-                                                                        onClose={handleClose}
-                                                                        aria-labelledby="alert-dialog-title"
-                                                                        aria-describedby="alert-dialog-description"
-                                                                    >
-                                                                        <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir esse país?"}
-                                                                        </DialogTitle>
-                                                                        <DialogContent>
-                                                                        <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir o bairro selecionada
-                                                                        </DialogContentText>
-                                                                        </DialogContent>
-                                                                        <DialogActions>
-                                                                        <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeleteDistrict(distric.id)}} autoFocus>
-                                                                            Sim
-                                                                        </Button>
-                                                                        </DialogActions>
-                                                                    </Dialog>
+                                                                        <DeleteIcon onClick={() => {handleClickOpen(distric)}} />                                                                                                                                       
+                                                                        <EditIcon onClick={() => {handleClickUpdateOpen(distric)}}/>
                                                                     </span>
                                                                 </TableCheckbox>
                                                                 
@@ -321,6 +343,54 @@ const Districts: React.FC = () => {
         </Container>
         <SideBar />
         <TopBar/>
+        <Dialogbox>
+        <Dialog
+            open={openUpdate}
+            onClose={handleUpdateClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+            {"Edição de dados"}
+            </DialogTitle>
+            <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+                Edite os dados relacionado a {district?.name}
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions >
+                <span>                                        
+                <Form ref={formRef} onSubmit={handleSubmit}>   
+                    <Input name="name"  defaultValue={district?.name} placeholder="Digite o país..." />  
+                </Form>
+                </span> 
+            </DialogActions>
+        </Dialog>
+       
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+            {"Tem certeza que quer excluir esse país?"}
+            </DialogTitle>
+            <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+                Clique em Sim se você deseja excluir {district?.name}
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Form ref={formRef} onSubmit={handleDeleteDistrict}>   
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button type="submit" autoFocus>
+                        Sim
+                    </Button>
+                </Form>
+            </DialogActions>
+        </Dialog>
+        </Dialogbox>
         </>
     )
 }

@@ -1,5 +1,6 @@
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import * as Yup from 'yup'; 
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Input } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FiCheck, FiCircle, FiSearch } from "react-icons/fi";
 import SearchInput from "../../../assets/components/SearchInput";
 import SideBar from '../../../assets/components/AuthSidebar';
@@ -10,6 +11,11 @@ import {Container, SubContainer, Content, MainContent, TopContent, Topside, Bott
 import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
+import getValidationErrors from '../../../utils/getValidationErrors';
+import { Dialogbox } from '../Countries/styles';
 
 
 interface ITreatmentForm {
@@ -21,10 +27,17 @@ interface ITreatmentForm {
 const TreatmentForm: React.FC = () => {
 
     const [treatmentForm, setTreatmentForm] = useState<ITreatmentForm[]>([])
+    const [treatmentForms, setTreatmentForms] = React.useState<ITreatmentForm>();
+
     const [loading, setLoading] = useState(true);
+
     const [open, setOpen] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+
+    const formRef = useRef<FormHandles>(null);
     const history = useHistory();
-    
+
+
     useEffect(() => {
         async function fetchMyAPI() {        
         let response = await api.get<ITreatmentForm[]>("TreatmentForms")        
@@ -51,12 +64,46 @@ const TreatmentForm: React.FC = () => {
          
     }
 
-    const handleClickOpen = () => {
+    const handleSubmit = useCallback( async (data: ITreatmentForm) => {
+        
+        try {
+            
+            formRef.current?.setErrors({});
+            const schema = Yup.object().shape({
+                name: Yup.string().required('Nome obrigatório'),              
+            });
+            await schema.validate(data, {
+                abortEarly: false,       
+              });
+      
+            await api.patch('/FoneTypes', data);
+            setOpenUpdate(false);
+            
+        } catch (err) {
+              if (err instanceof Yup.ValidationError) {
+                const errors = getValidationErrors(err);
+                formRef.current?.setErrors(errors);
+                return;
+              }
+            }
+      }, []);
+
+    const handleClickOpen = (treatmentForms:ITreatmentForm) => {
+        setTreatmentForms(treatmentForms)
         setOpen(true);
       };
     
-      const handleClose = () => {
+    const handleClose = () => {
         setOpen(false);
+      };
+
+    const handleClickUpdateOpen = (treatmentForms:ITreatmentForm) => {        
+        setTreatmentForms(treatmentForms)
+        setOpenUpdate(true);
+      };
+    
+    const handleUpdateClose = () => {
+        setOpenUpdate(false);
       };
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -110,29 +157,8 @@ const TreatmentForm: React.FC = () => {
                                                             <tr key={treatmentforms.id}>
                                                                 <TableCheckbox>
                                                                     <span>
-                                                                    <DeleteIcon  onClick={handleClickOpen}>
-                                                                    </DeleteIcon >
-                                                                    <Dialog
-                                                                        open={open}
-                                                                        onClose={handleClose}
-                                                                        aria-labelledby="alert-dialog-title"
-                                                                        aria-describedby="alert-dialog-description"
-                                                                    >
-                                                                        <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir essa opção?"}
-                                                                        </DialogTitle>
-                                                                        <DialogContent>
-                                                                        <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir a opção selecionada
-                                                                        </DialogContentText>
-                                                                        </DialogContent>
-                                                                        <DialogActions>
-                                                                        <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeleteTreatmentForm(treatmentforms.id)}} autoFocus>
-                                                                            Sim
-                                                                        </Button>
-                                                                        </DialogActions>
-                                                                    </Dialog>
+                                                                        <DeleteIcon onClick={() => {handleClickOpen(treatmentforms)}} />                                                                                                                                       
+                                                                        <EditIcon onClick={() => {handleClickUpdateOpen(treatmentforms)}}/>
                                                                     </span>
                                                                 </TableCheckbox>
                                                                 <th>{treatmentforms.id}</th>
@@ -170,6 +196,54 @@ const TreatmentForm: React.FC = () => {
         </Container>
         <SideBar />
         <TopBar/>
+        <Dialogbox>
+            <Dialog
+                open={openUpdate}
+                onClose={handleUpdateClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Edição de dados"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Edite os dados relacionado a {treatmentForms?.name}
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions >
+                    <span>                                        
+                    <Form ref={formRef} onSubmit={handleSubmit}>   
+                        <Input name="name"  defaultValue={treatmentForms?.name} placeholder="Digite o país..." />  
+                    </Form>
+                    </span> 
+                </DialogActions>
+            </Dialog>
+        
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Tem certeza que quer excluir esse país?"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Clique em Sim se você deseja excluir {treatmentForms?.name}
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Form ref={formRef} onSubmit={handleDeleteTreatmentForm}>   
+                        <Button onClick={handleClose}>Cancelar</Button>
+                        <Button type="submit" autoFocus>
+                            Sim
+                        </Button>
+                    </Form>
+                </DialogActions>
+            </Dialog>
+        </Dialogbox>
         </>
     )
 }

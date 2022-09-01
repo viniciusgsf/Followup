@@ -18,7 +18,7 @@ interface CountryFormData {
   name: string;  
 }
 
-const AddCountry: React.FC = () => {
+const AddSource: React.FC = () => {
   const history = useHistory();
   const [isSaved, setIsSaved] = useState(false);
 
@@ -38,15 +38,15 @@ const AddCountry: React.FC = () => {
       try {
           formRef.current?.setErrors({});
           const schema = Yup.object().shape({
-              name: Yup.string().required('Nome obrigatório'),              
+              name: Yup.string().required('Campo obrigatório'),              
           });
           await schema.validate(data, {
               abortEarly: false,       
             });
     
-          await api.post('/countries', data);
+          await api.post('/TreatmentForms', data);
           setIsSaved(true)
-          history.push('/countries')
+          history.push('/treatmentForm')
       } catch (err) {
             if (err instanceof Yup.ValidationError) {
               const errors = getValidationErrors(err);
@@ -65,8 +65,8 @@ const AddCountry: React.FC = () => {
               <MainContent>
                 <TopContent>
                   <Topside>
-                    <h4>Países</h4>
-                    <Link to="/countries">
+                    <h4>Cadastrar fontes</h4>
+                    <Link to="/source">
                       <h2>Voltar</h2>
                     </Link>
                   </Topside>
@@ -74,7 +74,7 @@ const AddCountry: React.FC = () => {
                     <BottomContainer>
                       <Form ref={formRef} onSubmit={handleSubmit}>                           
 
-                        <Input name="name" icon={FaGlobeAmericas} placeholder="Digite o país..." />                       
+                        <Input name="name" icon={FaGlobeAmericas} placeholder="Digite a fonte..." />                       
 
                         <CompButton type="submit">Cadastrar</CompButton>                        
 
@@ -90,11 +90,11 @@ const AddCountry: React.FC = () => {
         <TopBar/>
         <Snackbar open={isSaved} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          País gravado com sucesso.
+          Fonte gravado com sucesso.
         </Alert>
       </Snackbar>
       </>
     )
 }
 
-export default AddCountry;
+export default AddSource;

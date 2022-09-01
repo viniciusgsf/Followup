@@ -1,43 +1,134 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TableBody } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-import React from "react";
-import { AiOutlineCalendar, AiOutlineClose } from "react-icons/ai";
-import { FiCheck, FiCircle, FiSearch, FiTrash2 } from "react-icons/fi";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { FiClock } from "react-icons/fi";
+import { isToday, format, parseISO, isAfter } from 'date-fns';
+import { ptBR } from "date-fns/locale";
+import DayPicker ,{ DayModifiers } from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
 
 import SideBar from '../../assets/components/AuthSidebar';
-import SearchInput from "../../assets/components/SearchInput";
 import TopBar from "../../assets/components/topBar";
 
-import {Container, SubContainer, Content, GridContainer, Topside, FollowupContainer, ProspectInputs, ButtonDiv, DateInputs, DateContainer,
-    ProgressContainer, ProgressSelection, BplanContainer, BplanSelection, InteractiveButtonsDiv, InteractiveButtonsContent, InteractiveButtons,
-     ContentInfo, ContentContainer, BottomContent, TableScrollbar, TableItens, TableCheckbox} from './styles';
+import {Container, SubContainer, Content, GridContainer, Topside, FollowupContainer, Schedule, NextAppointment, Section, Appointment, Calendar} from './styles';
+import { useAuth } from "../../hooks/AuthContext";
+import api from "../../services/apiClient";
 
-const Homepage:React.FC = ( ) => {  
-    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-    const [peogress, setProgress] = React.useState('');
+interface MonthAvaliabilityItem {
+    day: number;
+    avaliable: boolean;
+}
 
-    const handleProgressChange = (event: SelectChangeEvent) => {
-        setProgress(event.target.value as string);
-    };
+interface Appointment2 {
+    id: string;
+    date: string;
+    hourFormatted: string;
+    user: {
+        name: string;
+        avatar_url: string;
+    }
+}
+
+const Homepage:React.FC = ( ) => { 
+    const { user } = useAuth();
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [currentMonth, setCurrenteMonth] = useState(new Date());
+    const [monthAvaliability, setMonthAvaliability] = useState<MonthAvaliabilityItem[]>([]);
+    const [appointments, setAppointments] = useState<Appointment2[]>([]);
+    const token = localStorage.getItem('@Followup:token');
+
+
+    const handleDateChange = useCallback((day: Date, modifiers: DayModifiers) => { 
+        console.log('oi')
+        if (modifiers.avaliable && !modifiers.disabled) {
+            setSelectedDate(day);
+        }   
+    }, []);
+
+    const handleMonthChange = useCallback ((month: Date) => {
+        setCurrenteMonth(month);
+    }, []);
+
+
+    useEffect(() => {
+        api.get(`/users/${user.id}`, {
+            // possivel cagada//
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+             // possivel cagada//
+            params: {
+                year: currentMonth.getFullYear(),
+                month: currentMonth.getMonth() + 1,           
+            },
+        }).then(response => {
+            setMonthAvaliability(response.data);
+        });
+    }, [currentMonth, user.id, token]);
+
+    useEffect(() => {
+        api.get<Appointment2[]>('/appointments', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            params: {
+                year: selectedDate.getFullYear(),
+                month: selectedDate.getMonth() + 1,
+                day: selectedDate.getDate(), 
+            }
+        }).then(response => {
+            const appointmentsFormatted = response.data.map(appointment => {
+                return {
+                    ...appointment,
+                    hourFormatted: format(parseISO(appointment.date), 'HH:mm')
+                }
+            });
+
+            setAppointments(appointmentsFormatted);
+        })
+        
+    }, [selectedDate, token])
     
-    const [priority, setPriority] = React.useState('');
+    const selectedDayAsText = useMemo(() => {
+        return format(selectedDate, "'Dia' dd 'de' MMMM", {
+            locale: ptBR,
+        })
+    }, [selectedDate]);
 
-    const handlePriorityChange = (event: SelectChangeEvent) => {
-        setPriority(event.target.value as string);
-    };
+    const selectedWeekDay = useMemo(() => {
+        return format(selectedDate, 'cccc', {locale: ptBR})
+    }, [selectedDate]);
 
-    const [local, setLocal] = React.useState('');
+    const morningAppointments = useMemo(( ) => {
+        return appointments.filter(appointment => {
+            return parseISO(appointment.date).getHours() < 12;
+        })
+    }, [appointments]);
 
-    const handleLocalChange = (event: SelectChangeEvent) => {
-        setLocal(event.target.value as string);
-    };
+    const afternoonAppointments = useMemo(( ) => {
+        return appointments.filter(appointment => {
+            return parseISO(appointment.date).getHours() >= 12;
+        })
+    }, [appointments]);
 
-    const [bplan, setBplan] = React.useState('');
+    const nextAppointment = useMemo(() => {
+        return appointments.find(appointment =>
+            isAfter (parseISO(appointment.date), new Date())   
+        )
+    }, [appointments])
 
-    const handleBplanChange = (event: SelectChangeEvent) => {
-        setBplan(event.target.value as string);
-    };
+    const disabledDays = useMemo(() => { 
+        // eslint-disable-next-line eqeqeq
+        const dates = monthAvaliability.filter(monthDay => monthDay.avaliable === false)
+        .map(monthDay => {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+            return new Date(year, month, monthDay.day);
+
+
+        });
+
+        return dates;
+    }, [currentMonth, monthAvaliability]);
 
     return (<>
         <SideBar/>
@@ -50,206 +141,104 @@ const Homepage:React.FC = ( ) => {
                             <h4>Followup</h4>
                         </Topside>
                         <FollowupContainer>
-                                <ProspectInputs>
-                                    <label>
-                                        <ButtonDiv>
-                                        <SearchInput name="businessplan" icon={FiSearch} type="text" placeholder="Prospecto"/>
-                                        </ButtonDiv>    
-                                        <ButtonDiv>
-                                        <SearchInput name="description" icon={FiSearch} type="text"/>
-                                        </ButtonDiv>
-                                    </label>
-                                </ProspectInputs>
-                                <DateInputs>
-                                    <DateContainer>
-                                        <ButtonDiv>
-                                            <span>
-                                                <p>Período</p>
-                                            </span>
-                                        <SearchInput name="businessplan" icon={AiOutlineCalendar} type="text" placeholder="..."/>
-                                        </ButtonDiv>    
-                                        <ButtonDiv>
-                                        <SearchInput name="description" icon={AiOutlineCalendar} type="text" placeholder="..."/>
-                                            <span>
-                                                <Checkbox />
-                                                <p>Qualquer</p>
-                                            </span>
-                                        </ButtonDiv>
-                                    </DateContainer>
-                                    <DateContainer>
-                                        <ButtonDiv>
-                                            <span>
-                                                <p>Data Futura</p>
-                                            </span>
-                                        <SearchInput name="businessplan" icon={AiOutlineCalendar} type="text" placeholder="..."/>
-                                        </ButtonDiv>    
-                                        <ButtonDiv>
-                                        <SearchInput name="description" icon={AiOutlineCalendar} type="text" placeholder="..."/>
-                                            <span>
-                                                <Checkbox />
-                                                <p>Qualquer</p>
-                                            </span>
-                                        </ButtonDiv>
-                                           
-                                    </DateContainer>
-                                </DateInputs>
-                                <DateInputs>
-                                    <ProgressContainer>
-                                        <ProgressSelection>
+                            <Schedule>
+                                <h1>Horários agendados</h1>
+                                <p>
+                                    {isToday(selectedDate) && <span>Hoje</span>}
+                                    <span>{selectedDayAsText}</span>
+                                    <span>{selectedWeekDay}</span>
+                                </p>
+
+                                {isToday(selectedDate) && nextAppointment && (
+                                    <NextAppointment>
+                                        <strong>Agendamento a Seguir</strong>
+                                        <div>
+                                            <img src={nextAppointment.user.avatar_url} alt={nextAppointment.user.name} />
                                             
-                                            <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="demo-simple-select-label">Periodo</InputLabel>
-                                                    <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={peogress}
-                                                    label="Periodo"
-                                                    onChange={handleProgressChange}
-                                                    >
-                                                    <MenuItem value={10}>Atendido</MenuItem>
-                                                    <MenuItem value={20}>Pendente</MenuItem>
-                                                    <MenuItem value={30}>Todos</MenuItem>
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                            
-                                            <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="demo-simple-select-label">Prioridade</InputLabel>
-                                                    <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={priority}
-                                                    label="Prioridade"
-                                                    onChange={handlePriorityChange}
-                                                    >
-                                                    <MenuItem value={10}>Altas</MenuItem>
-                                                    <MenuItem value={20}>Medias</MenuItem>
-                                                    <MenuItem value={30}>Baixas</MenuItem>
-                                                    <MenuItem value={40}>Todas</MenuItem>
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                            
-                                            <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="demo-simple-select-label">Local</InputLabel>
-                                                    <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={local}
-                                                    label="Local"
-                                                    onChange={handleLocalChange}
-                                                    >
-                                                    <MenuItem value={10}>Próprio</MenuItem>
-                                                    <MenuItem value={20}>Parceiro</MenuItem>
-                                                    <MenuItem value={30}>Externo</MenuItem>
-                                                    <MenuItem value={40}>Qualquer</MenuItem>
-                                                    <MenuItem value={50}>Todos</MenuItem>
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                        
-                                        </ProgressSelection>
-                                    </ProgressContainer>
-                                    <BplanContainer>
-                                        <BplanSelection>
-                                           
-                                            <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="demo-simple-select-label">Planos de Negócio</InputLabel>
-                                                    <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={bplan}
-                                                    label="Prioridade"
-                                                    onChange={handleBplanChange}
-                                                    >
-                                                    <MenuItem value={10}>Todos</MenuItem>
-                                                    <MenuItem value={20}>Medias</MenuItem>
-                                                    <MenuItem value={30}>Baixas</MenuItem>
-                                                    <MenuItem value={40}>Todas</MenuItem>
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                        </BplanSelection>
-                                    </BplanContainer>
-                                </DateInputs>
+                                            <strong>{nextAppointment.user.name}</strong>
+                                            <span>
+                                                <FiClock/>
+                                                {nextAppointment.hourFormatted}
+                                            </span>
+                                        </div>
+                                    </NextAppointment>
+                                )}
+
+                                <Section>
+                                    <strong>Manhã</strong>
+
+                                    {morningAppointments.length === 0 && (
+                                        <p>Nenhum agendamento nesse período</p>
+                                    )}
+
+                                    {morningAppointments.map(appointment => (
+                                        <Appointment key={appointment.id}>
+                                            <span>
+                                                <FiClock/>
+                                                {appointment.hourFormatted}
+                                            </span>
+
+                                            <div>
+                                                <img src={appointment.user.avatar_url} alt="Vinicius Ferreira" />
+                                                <strong>{appointment.user.name}</strong>
+                                            </div>
+                                        </Appointment>
+                                    ))}
+
+                                    
+
+                                </Section>
+                                <Section>
+                                    {afternoonAppointments.map(appointment => (
+                                            <Appointment key={appointment.id}>
+                                                <span>
+                                                    <FiClock/>
+                                                    {appointment.hourFormatted}
+                                                </span>
+
+                                                <div>
+                                                    <img src={appointment.user.avatar_url} alt="Vinicius Ferreira" />
+                                                    <strong>{appointment.user.name}</strong>
+                                                </div>
+                                            </Appointment>
+                                        ))}
+                                </Section>
+
+                            </Schedule>
+
+                            <Calendar>
+                            <DayPicker
+                                weekdaysShort={['D', 'S', 'T', 'Q', 'Q', 'S', 'S']}
+                                fromMonth={new Date()}
+                                disabledDays={[
+                                    {daysOfWeek: [0, 6]}, ...disabledDays 
+                                ]}
+                                modifiers={{
+                                    available: { daysOfWeek: [1, 2, 3, 4, 5]},
+                                }}
+                                onMonthChange={handleMonthChange}
+                                selectedDays={selectedDate}
+                                onDayClick={handleDateChange}
+                                months= {[
+                                    'Janeiro',
+                                    'Fevereiro',
+                                    'Março',
+                                    'Abril',
+                                    'Maio',
+                                    'Junho',
+                                    'Julho',
+                                    'Agosto',
+                                    'Setembro',
+                                    'Outubro',
+                                    'Novembro',
+                                    'Dezembro',
+
+                                ]}
+                            />
+                            </Calendar>
                         </FollowupContainer>
-                        <BottomContent>
-                            <ContentContainer>
-                                <ContentInfo> 
-                                    <TableScrollbar>
-                                        <TableItens>
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <TableCheckbox>
-                                                            <span>
-                                                                <Checkbox {...label} />
-                                                            </span>
-                                                        </TableCheckbox>
-                                                        <th>Data futura</th>
-                                                        <th>Hora futura</th>
-                                                        <th>Sigla</th>
-                                                        <th>Cod.</th>
-                                                        <th>Nome/Razão social</th>
-                                                        <th>Ação</th>
-                                                        <th>Direto/indireto</th>
-                                                        <th>Motivos</th>
-                                                        <th>Observações </th>
-                                                        <th>Meio de Contato</th>
-                                                        <th>Andamento</th>
-                                                        <th>Rel.</th>
-                                                    </tr>
-                                                </thead>
-                                                <TableBody>
-                                                        <tr>
-                                                            <TableCheckbox>
-                                                                <span>
-                                                                    <Checkbox {...label} />
-                                                                </span>
-                                                            </TableCheckbox>
-                                                            <th> 100101</th>
-                                                            <th>Descrição placeholder</th>
-                                                            <th>Sigla placeholder</th><th>Cod.</th>
-                                                            <th>placeholder</th>
-                                                            <th>placeholder</th>
-                                                            <th>placeholder</th>
-                                                            <th>placeholder</th>
-                                                            <th>placeholder </th>
-                                                            <th>placeholder</th>
-                                                            <th>placeholder</th>
-                                                            <th>placeholder</th>
-                                                        </tr> 
-                                                          
-                                                </TableBody>
-                                            </table>
-                                        </TableItens>
-                                    </TableScrollbar>
-                                    <InteractiveButtons>
-                                        <InteractiveButtonsContent>
-                                            <InteractiveButtonsDiv>
-                                                <Button variant="contained">Incluir</Button>
-                                            </InteractiveButtonsDiv>
-                                            <InteractiveButtonsDiv>
-                                                <Button variant="contained"><FiTrash2/>Excluir</Button>
-                                            </InteractiveButtonsDiv>
-                                            <InteractiveButtonsDiv>
-                                                <Button variant="contained"><FiCheck/>Confirmar</Button>
-                                            </InteractiveButtonsDiv>
-                                            <InteractiveButtonsDiv>
-                                                <Button variant="contained"><FiCircle/>Renovar</Button>
-                                            </InteractiveButtonsDiv>
-                                            <InteractiveButtonsDiv>
-                                                <Button variant="contained"><AiOutlineClose/>Fechar</Button>
-                                            </InteractiveButtonsDiv>
-                                        </InteractiveButtonsContent>
-                                    </InteractiveButtons>
-                                </ContentInfo>
-                            </ContentContainer>
-                        </BottomContent>
+                        
+                        
                     </GridContainer>
                 </Content>
             </SubContainer>

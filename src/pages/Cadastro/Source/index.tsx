@@ -10,25 +10,24 @@ import {Container, SubContainer, Content, MainContent, TopContent, Topside, Bott
 } from './styles';
 import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import getValidationErrors from '../../../utils/getValidationErrors';
 import { Dialogbox } from '../Countries/styles';
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 
-interface IJobFunction {
+interface ISource {
     id: string;
     name: string;
 }
  
 
-const JobFunctions: React.FC = () => {
+const Source: React.FC = () => {
 
-    const [jobFunction, setJobFunction] = useState<IJobFunction[]>([])
-
-    const [jobFunctions, setJobFunctions] = React.useState<IJobFunction>();
+    const [source, setSource] = useState<ISource[]>([])
+    const [sources, setSources] = React.useState<ISource>();
 
     const [loading, setLoading] = useState(true);
 
@@ -36,15 +35,14 @@ const JobFunctions: React.FC = () => {
     const [openUpdate, setOpenUpdate] = useState(false);
 
     const formRef = useRef<FormHandles>(null);
-    
     const history = useHistory();
 
-    
+
     useEffect(() => {
         async function fetchMyAPI() {        
-        let response = await api.get<IJobFunction[]>("JobFunction")        
+        let response = await api.get<ISource[]>("sources")        
 
-        setJobFunction(response.data)
+        setSource(response.data)
         setLoading(false);  
     }
 
@@ -52,21 +50,21 @@ const JobFunctions: React.FC = () => {
     }, [])
 
     const handleCreate = () => {
-        history.push('/jobFunctions/add')
+        history.push('/source/add')
     }
 
     
-    const handleDeleteJobFunction= async (jobFunction:string) => {
+    const handleDeleteTreatmentForm= async (treatmentForms:string) => {
        
-        await api.delete(`/JobFunction/${jobFunction}`)
-        let response = await api.get<IJobFunction[]>("JobFunction")
-        setJobFunction(response.data)
+        await api.delete(`/sources/${treatmentForms}`)
+        let response = await api.get<ISource[]>("sources")
+        setSource(response.data)
         setLoading(false);
         setOpen(false);
          
     }
 
-    const handleSubmit = useCallback( async (data: IJobFunction) => {
+    const handleSubmit = useCallback( async (data: ISource) => {
         
         try {
             
@@ -78,7 +76,7 @@ const JobFunctions: React.FC = () => {
                 abortEarly: false,       
               });
       
-            await api.patch('/JobFunction', data);
+            await api.patch('/sources', data);
             setOpenUpdate(false);
             
         } catch (err) {
@@ -90,8 +88,8 @@ const JobFunctions: React.FC = () => {
             }
       }, []);
 
-    const handleClickOpen = (jobFunctions:IJobFunction) => {
-        setJobFunctions(jobFunctions)
+    const handleClickOpen = (treatmentForms:ISource) => {
+        setSources(treatmentForms)
         setOpen(true);
       };
     
@@ -99,14 +97,15 @@ const JobFunctions: React.FC = () => {
         setOpen(false);
       };
 
-    const handleClickUpdateOpen = (jobFunctions:IJobFunction) => {        
-        setJobFunctions(jobFunctions)
+    const handleClickUpdateOpen = (treatmentForms:ISource) => {        
+        setSources(treatmentForms)
         setOpenUpdate(true);
       };
     
     const handleUpdateClose = () => {
         setOpenUpdate(false);
       };
+
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     return (
         <>
@@ -116,7 +115,7 @@ const JobFunctions: React.FC = () => {
                     <MainContent>
                         <TopContent>
                             <Topside>
-                                <h4>Tipos de Função</h4>
+                                <h4>Fontes</h4>
                             </Topside>
                             <BottomSide>
                                 <BottomContainer>
@@ -146,24 +145,24 @@ const JobFunctions: React.FC = () => {
                                                             </span>
                                                         </TableCheckbox>
                                                         <th>Código</th>
-                                                        <th>Tipo de função</th>
+                                                        <th>Titulo</th>
                                                     </tr>
                                                 </thead>
                                                 <TableBody>
                                                     <tr>
                                                        
                                                     </tr>
-                                                    { jobFunction.map(JobFunctions => {
+                                                    { source.map(sources => {
                                                         return (
-                                                            <tr key={JobFunctions.id}>
+                                                            <tr key={sources.id}>
                                                                 <TableCheckbox>
                                                                     <span>
-                                                                        <DeleteIcon onClick={() => {handleClickOpen(JobFunctions)}} />                                                                                                                                       
-                                                                        <EditIcon onClick={() => {handleClickUpdateOpen(JobFunctions)}}/>
+                                                                        <DeleteIcon onClick={() => {handleClickOpen(sources)}} />                                                                                                                                       
+                                                                        <EditIcon onClick={() => {handleClickUpdateOpen(sources)}}/>
                                                                     </span>
                                                                 </TableCheckbox>
-                                                                <th>{JobFunctions.id}</th>
-                                                                <th>{JobFunctions.name}</th>
+                                                                <th>{sources.id}</th>
+                                                                <th>{sources.name}</th>
                                                                 
                                                             </tr>                                                            
                                                             
@@ -209,13 +208,13 @@ const JobFunctions: React.FC = () => {
                 </DialogTitle>
                 <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Edite os dados relacionado a {jobFunctions?.name}
+                    Edite os dados relacionado a {sources?.name}
                 </DialogContentText>
                 </DialogContent>
                 <DialogActions >
                     <span>                                        
                     <Form ref={formRef} onSubmit={handleSubmit}>   
-                        <Input name="name"  defaultValue={jobFunctions?.name} placeholder="Digite o país..." />  
+                        <Input name="name"  defaultValue={sources?.name} placeholder="Digite o país..." />  
                     </Form>
                     </span> 
                 </DialogActions>
@@ -232,11 +231,11 @@ const JobFunctions: React.FC = () => {
                 </DialogTitle>
                 <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Clique em Sim se você deseja excluir {jobFunctions?.name}
+                    Clique em Sim se você deseja excluir {sources?.name}
                 </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Form ref={formRef} onSubmit={handleDeleteJobFunction}>   
+                    <Form ref={formRef} onSubmit={handleDeleteTreatmentForm}>   
                         <Button onClick={handleClose}>Cancelar</Button>
                         <Button type="submit" autoFocus>
                             Sim
@@ -244,9 +243,9 @@ const JobFunctions: React.FC = () => {
                     </Form>
                 </DialogActions>
             </Dialog>
-            </Dialogbox>
+        </Dialogbox>
         </>
     )
 }
 
-export default JobFunctions;
+export default Source;

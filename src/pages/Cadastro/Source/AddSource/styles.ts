@@ -90,6 +90,14 @@ export const BottomContainer = styled.div`
         
     }
 
+    div {
+        width: 100%;
+        height: 52px;
+        border-radius: 7px;
+        margin-top: 5px;
+
+    }
+
 `;
 
 export const BottomInputs = styled.div `

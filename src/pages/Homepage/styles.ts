@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { shade } from "polished";
 
 export const Container = styled.div`
     display: flex;
@@ -49,6 +50,7 @@ export const Topside = styled.div`
 `;
 
 export const FollowupContainer = styled.div`
+    display: flex;
     background-color: #FFF;
     color: #121828;
     transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -56,343 +58,202 @@ export const FollowupContainer = styled.div`
     box-shadow: 0px 1px 1px rgba(100, 116, 139, 0.06),0px 1px 2px rgba(100, 116, 139, 0.1);
     overflow: hidden;
     margin-right: 23px;
+    margin-top: 50px;
     
 
 `;
 
-export const ProspectInputs = styled.div `
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 14px;
+export const Schedule = styled.div`
+    flex: 1;
+    margin-right: 120px;
+    padding-left: 20px;
+    padding-right: 20px;
 
-    label {
-        display: flex;
-        flex-direction: row;
-
-        @media (max-width: 600px) {
-            flex-direction: column;
-        }
+    h1 {
+        font-size: 36px;
+        
     }
-`;
-
-export const DateInputs  = styled.div `
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 14px;
-
-
-    
-`;
-
-export const DateContainer = styled.div`
-    display: flex;
-    align-items: center;    
-    justify-content: center;
-    align-items: center;
-    max-width: 1080px;
-
-    span {
+    p {
+        margin-top: 8px;
+        color: #1565c0;
         display: flex;
         align-items: center;
-        margin-right: 7px;
-        width: 85px;
+        font-weight: 500;
 
-        @media (max-width: 600px) {
-
-        margin: auto;
-        width: auto;
-    }}
-        
-    @media (max-width: 600px) {
-        flex-direction: column;
-    }
-    
-        
-`;
-
-export const DateSelection = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-    div { 
-        width: 100%;
-        margin-right: 10px;
-    }
-
-    @media (max-width: 600px) {
-        flex-direction: column;
-        margin-top: 20px;
-    }
-
-    span {
-        p {
-            padding-top:10px;
-            padding-bottom: 10px;
-            
+        span {
+            display: flex;
+            align-items: center;
+        }
+        span + span::before {
+            content: '';
+            width: 1px;
+            height: 12px;
+            background: #ff9000;
+            margin: 0 8px;
         }
     }
 `;
 
-export const ProgressContainer = styled.div `
-    display: flex;
-    align-items: center;    
-    justify-content: center;
-    align-items: center;
 
-        
-    @media (max-width: 600px) {
-        flex-direction: column;
-    }
-    
-        
-`;
-export const ProgressSelection = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+export const NextAppointment = styled.aside`
+    margin-top: 64px;
 
-    div { 
-        width: 100%;
-        margin-right: 10px;
-    }
-
-    @media (max-width: 600px) {
-        flex-direction: column;
-        margin-top: 20px;
-    }
-
-    
-`;
-
-
-export const ButtonDiv = styled.div`
-    display: flex;
-    margin-right: 10px;
-    width: 100%;
-
-    @media (max-width: 600px) {
-        flex-direction: column;
-    }
-`;
-
-export const BplanContainer = styled.div `
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 14px;
-`;
-
-export const BplanSelection = styled.div`
-    display: flex;
-    width: 100%;
-    margin-top: 15px;
-
-    div { 
-        width: 100%;
-        margin-right: 10px;
-    }
-
-    
-`;
-
-
-
-
-
-export const BottomContainer = styled.div`
-    background-color: #FFF;
-    color: #121828;
-    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    border-radius: 8px;
-    box-shadow: 0px 1px 1px rgba(100, 116, 139, 0.06),0px 1px 2px rgba(100, 116, 139, 0.1);
-    overflow: hidden;
-    margin-right: 23px;
-
-    @media (max-width: 600px) {
-        margin: auto;
-    }
-
-`;
-
-export const BottomInputs = styled.div `
-    :last-child {
-        padding-bottom: 32px
-    }
-    padding: 32px 24px;
-
-    label {
-        display: flex;
-        flex-direction: row;
-
-        @media (max-width: 600px) {
-            flex-direction: column;
-        }
-    }
-`;
-
-export const ButtonBottomDiv = styled.div`
-    margin-right: 10px;
-    width: 100%;
-`;
-
-
-
-
-export const BottomContent = styled.div `
-    margin-top: 24px;
-    padding-right: 23px;
-`;
-
-export const ContentContainer = styled.div `
-    background-color: #FFF;
-    color: #121828;
-    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    border-radius: 8px;
-    box-shadow: 0px 1px 1px rgba(100, 116, 139, 0.06),0px 1px 2px rgba(100, 116, 139, 0.1);
-    overflow: hidden;
-    
-`;
-
-export const ContentInfo = styled.div `
-    box-sizing: border-box;
-    margin: 0;
-`;
-
-export const TableScrollbar = styled.div `
-    @media ( max-width: 600px) {
-        overflow-x: scroll;
-    }
-
-    @media (max-width: 1200px) {
-        overflow-x: scroll;
-    }
-`;
-
-export const TableItens = styled.div`
-    min-width: 1050px;
-    overflow-x: scroll;
-    table {
-        display: table;
-        width: 100%;
-        border-collapse: collapse;
-        border-spacing: 0;
-
-        thead {
-            display: table-header-group;
-            background-color: #F3F4F6;
-            border-bottom: none;
-
-
-            tr {
-                color: inherit;
-                display: table-row;
-                vertical-align: middle;
-                outline: 0;
-
-                th {
-                    border-bottom: none;
-                    font-size: 12px;
-                    font-weight: 600;
-                    line-height: 1;
-                    letter-spacing: 0.5px;
-                    text-transform: uppercase;
-                }
-            }
-        }
-    }  
-`;
-
-export const TableCheckbox = styled.th`
-    border-bottom: none;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;font-family: "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-    display: table-cell;
-    vertical-align: inherit;
-    text-align: left;
-    padding: 0 0 0 4px;
-    width: 48px;
-
-    span {
-            display: inline-flex;
-            justify-content: center;
-            align-self: flex-start;
-            box-sizing: border-box;
-            background-color: transparent;
-            outline: currentcolor none 0px;
-                border: 0px none;
-            margin: 0px;
-            cursor: pointer;
-            user-select: none;
-            vertical-align: middle;
-            appearance: none;
-            text-decoration: none;
-            padding: 9px;
-            color: rgb(101, 116, 139);
-        }
-`;
-
-export const TableBody = styled.tbody `
-    display: table-header-group;
-
-    thead {
-        background-color: #fff;
-    }
-
-    th {
-        max-width: 600px;
+    > strong {
+        color: #999591;
+        font-size: 20px;
         font-weight: 400;
-        font-size: 15px;
-        
     }
 
-`;
-
-export const InteractiveButtons = styled.div`
-    min-height: 52px;
-    margin-top: 15px;   
-    
-`;
-
-export const InteractiveButtonsContent = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    align-items: flex-end;
-    position: relative;
-
-    @media ( max-width: 600px) {
-        flex-direction: column;
+    div {
+        background: #3e3b47;
+        display: flex;
         align-items: center;
-        justify-content: center;
+        padding: 16px 24px;
+        border-radius: 10px;
+        margin-top: 24px;
+        position: relative;
+
+        &::before {
+            position: absolute;
+            height: 80%;
+            width: 1px;
+            left: 0;
+            top: 10%;
+            content: '';
+            background: #ff9000;
+        }
+
+        img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+        strong {
+            margin-left: 24px;
+            color: #FFF;
+        }
+        span {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            color: #999591;
+
+            svg {
+                color: #ff9000;
+                margin-right: 8px;
+            } 
+        }
+
     }
 `;
 
-export const InteractiveButtonsDiv = styled.div`
-    margin-left: 10px;
-    
-    @media ( max-width: 600px) {
-        width: 100%;
-        padding-left: 24px;
-        padding-right: 24px;
-        margin-top: 12px;
+export const Section = styled.section`
+    margin-top: 48px;
 
-        button {
-            width: 100%
+    >strong {
+        color: #999591;
+        font-size: 20px;
+        line-height: 26px;
+        border-bottom: 1px solid #3e3b47;
+        display: block;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+    }
+`;
+
+export const Appointment = styled.div`
+    display: flex;
+    align-items: center;
+
+    & + div {
+        margin-top: 16px;
+    }
+
+    span {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            color: #F4ede8;
+
+            svg {
+                color: #ff9000;
+                margin-right: 8px;
+            } 
         }
-    }
 
-    svg {
-        height: 15px;
-        width: 15px;
-        margin-right: 5px;
-    }
+    div{
+        flex: 1;
+        background: #3e3b47;
+        display: flex;
+        align-items: center;
+        padding: 16px 24px;
+        border-radius: 10px;
+        margin-left: 24px;
+        
+        img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+        }
+        strong {
+            margin-left: 24px;
+            color: #FFF;
+            font-size: 20px;
+        }
+
+    }    
+`;
+export const Calendar = styled.aside`
+   width: 380px;
+
+   .DayPicker {
+  background: #28262e;
+  border-radius: 10px;
+}
+
+.DayPicker-wrapper {
+  padding-bottom: 0;
+}
+
+.DayPicker,
+.DayPicker-Month {
+  width: 100%;
+}
+
+.DayPicker-Month {
+  border-collapse: separate;
+  border-spacing: 8px;
+  margin: 16px;
+}
+
+.DayPicker-Day {
+  width: 40px;
+  height: 40px;
+}
+
+.DayPicker-Day--available:not(.DayPicker-Day--outside) {
+  background: #1565c0;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.DayPicker:not(.DayPicker--interactionDisabled)
+  .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+  background: ${shade(0.2, '#1565c0')};
+}
+
+.DayPicker-Day--today {
+  font-weight: normal;
+}
+
+.DayPicker-Day--disabled {
+  color: #666360 !important;
+  background: transparent !important;
+}
+
+.DayPicker-Day--selected {
+  background: #FFF !important;
+  border-radius: 10px;
+  color: #232129 !important;
+}
 `;

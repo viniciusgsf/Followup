@@ -1,5 +1,5 @@
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Input } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FiCheck, FiCircle, FiSearch } from "react-icons/fi";
 import SearchInput from "../../../assets/components/SearchInput";
 import SideBar from '../../../assets/components/AuthSidebar';
@@ -7,10 +7,18 @@ import TopBar from "../../../assets/components/topBar";
 import {Container, SubContainer, Content, MainContent, TopContent, Topside, BottomSide, BottomContainer , BottomInputs, ButtonDiv, BottomContent, ContentContainer, ContentInfo,
     TableScrollbar, TableItens, TableCheckbox, TableBody, InteractiveButtons, InteractiveButtonsContent, InteractiveButtonsDiv
 } from './styles';
+
 import api from "../../../services/apiClient";
 import { useHistory } from "react-router-dom";
-
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import * as Yup from 'yup'; 
+import { FormHandles } from "@unform/core";
+import { Form } from "@unform/web";
+import getValidationErrors from "../../../utils/getValidationErrors";
+import { Dialogbox } from "../Countries/styles";
+
+
 interface IPublicPlaceType {
     id: string;
     name: string;
@@ -20,9 +28,15 @@ interface IPublicPlaceType {
 const PublicPlaceTypes: React.FC = () => {
 
     const [publicPlaceType, setPublicPlaceType] = useState<IPublicPlaceType[]>([])
+    const [publicPlaceTypes, setPublicPlaceTypes] = React.useState<IPublicPlaceType>();
+
     const [loading, setLoading] = useState(true);
+
     const [open, setOpen] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+
     const history = useHistory();
+    const formRef = useRef<FormHandles>(null);
     
     useEffect(() => {
         async function fetchMyAPI() {        
@@ -47,16 +61,50 @@ const PublicPlaceTypes: React.FC = () => {
         setPublicPlaceType(response.data)
         setLoading(false);
         setOpen(false);
-         
     }
 
-    const handleClickOpen = () => {
+    const handleSubmit = useCallback( async (data: IPublicPlaceType) => {
+        
+        try {
+            
+            formRef.current?.setErrors({});
+            const schema = Yup.object().shape({
+                name: Yup.string().required('Nome obrigatório'),              
+            });
+            await schema.validate(data, {
+                abortEarly: false,       
+              });
+      
+            await api.patch('/publicPlaceTypes', data);
+            setOpenUpdate(false);
+            
+        } catch (err) {
+              if (err instanceof Yup.ValidationError) {
+                const errors = getValidationErrors(err);
+                formRef.current?.setErrors(errors);
+                return;
+              }
+            }
+      }, []);
+
+    const handleClickOpen = (publicPlaceTypes:IPublicPlaceType) => {
+        setPublicPlaceTypes(publicPlaceTypes)
         setOpen(true);
       };
     
-      const handleClose = () => {
+    const handleClose = () => {
         setOpen(false);
       };
+
+    const handleClickUpdateOpen = (publicPlaceTypes:IPublicPlaceType) => {        
+        setPublicPlaceTypes(publicPlaceTypes)
+        setOpenUpdate(true);
+      };
+    
+    const handleUpdateClose = () => {
+        setOpenUpdate(false);
+      };
+
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     return (
@@ -109,29 +157,8 @@ const PublicPlaceTypes: React.FC = () => {
                                                             <tr key={publicPlaceTypes.id}>
                                                                 <TableCheckbox>
                                                                     <span>
-                                                                    <DeleteIcon  onClick={handleClickOpen}>
-                                                                    </DeleteIcon >
-                                                                    <Dialog
-                                                                        open={open}
-                                                                        onClose={handleClose}
-                                                                        aria-labelledby="alert-dialog-title"
-                                                                        aria-describedby="alert-dialog-description"
-                                                                    >
-                                                                        <DialogTitle id="alert-dialog-title">
-                                                                        {"Tem certeza que quer excluir esse país?"}
-                                                                        </DialogTitle>
-                                                                        <DialogContent>
-                                                                        <DialogContentText id="alert-dialog-description">
-                                                                            Clique em Sim se você deseja excluir o país selecionado
-                                                                        </DialogContentText>
-                                                                        </DialogContent>
-                                                                        <DialogActions>
-                                                                        <Button onClick={handleClose}>Cancelar</Button>
-                                                                        <Button onClick={()=>{handleDeletePublicPlaceType(publicPlaceTypes.id)}} autoFocus>
-                                                                            Sim
-                                                                        </Button>
-                                                                        </DialogActions>
-                                                                    </Dialog>
+                                                                        <DeleteIcon onClick={() => {handleClickOpen(publicPlaceTypes)}} />                                                                                                                                       
+                                                                        <EditIcon onClick={() => {handleClickUpdateOpen(publicPlaceTypes)}}/>
                                                                     </span>
                                                                 </TableCheckbox>
                                                                 <th>{publicPlaceTypes.id}</th>
@@ -169,6 +196,54 @@ const PublicPlaceTypes: React.FC = () => {
         </Container>
         <SideBar />
         <TopBar/>
+        <Dialogbox>
+            <Dialog
+                open={openUpdate}
+                onClose={handleUpdateClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Edição de dados"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Edite os dados relacionado a {publicPlaceTypes?.name}
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions >
+                    <span>                                        
+                    <Form ref={formRef} onSubmit={handleSubmit}>   
+                        <Input name="name"  defaultValue={publicPlaceTypes?.name} placeholder="Digite o país..." />  
+                    </Form>
+                    </span> 
+                </DialogActions>
+            </Dialog>
+        
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Tem certeza que quer excluir esse país?"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Clique em Sim se você deseja excluir {publicPlaceTypes?.name}
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Form ref={formRef} onSubmit={handleDeletePublicPlaceType}>   
+                        <Button onClick={handleClose}>Cancelar</Button>
+                        <Button type="submit" autoFocus>
+                            Sim
+                        </Button>
+                    </Form>
+                </DialogActions>
+            </Dialog>
+        </Dialogbox>
         </>
     )
 }

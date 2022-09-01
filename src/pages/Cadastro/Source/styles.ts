@@ -79,24 +79,14 @@ export const BottomInputs = styled.div `
 
     label {
         display: flex;
-        flex-direction: column;
-
-        div {
-            height: 52px;
-            width: 100%;
-            margin-bottom: 10px;
-            
-        }
+        flex-direction: row;
 
         @media (max-width: 600px) {
             flex-direction: column;
-
-            div {
-                margin-top: 6px;
-            }
         }
     }
 `;
+
 export const ButtonDiv = styled.div`
     margin-right: 10px;
     width: 100%;
@@ -254,13 +244,4 @@ export const InteractiveButtonsDiv = styled.div`
         width: 15px;
         margin-right: 5px;
     }
-`;
-
-export const Dialogbox = styled.div`
-    span {
-    display: flex;
-    margin: auto;
-    align-items: center;
-    justify-content: center
-   }
 `;

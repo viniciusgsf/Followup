@@ -34,6 +34,8 @@ import AddNationality from "../../pages/Cadastro/Nationality/AddNationality";
 import AddTreatmentForm from "../../pages/Cadastro/TreatmentForm/AddTreatmentForm";
 import AddReason from "../../pages/Cadastro/Reason/AddReason";
 import AddPhoneTypes from "../../pages/Cadastro/PhoneTypes/AddPhoneTypes";
+import Source from "../../pages/Cadastro/Source";
+import AddSource from "../../pages/Cadastro/Source/AddSource";
 
 
 const CadastroRoutes: React.FC = ( ) => (
@@ -83,6 +85,9 @@ const CadastroRoutes: React.FC = ( ) => (
 
             <Route path='/reason/add' isPrivate component={AddReason} />
             <Route path="/reason"  isPrivate component={Reason} /> 
+
+            <Route path='/source/add' isPrivate component={AddSource} />
+            <Route path="/source"  isPrivate component={Source} /> 
               
 
         </Switch>

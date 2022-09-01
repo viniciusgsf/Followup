@@ -249,3 +249,11 @@ export const InteractiveButtonsDiv = styled.div`
         margin-right: 5px;
     }
 `;
+
+export const Dialogbox = styled.div`
+    span {
+    display: flex;
+    align-items: center;
+    justify-content: center
+   }
+`;
